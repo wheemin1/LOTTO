@@ -60,7 +60,7 @@ export class LotteryLogic {
 
     // 행운숫자와 일치하는 숫자가 있으면 무조건 당첨 (최소 1000원)
     if (matchCount > 0) {
-      // 확률 기반 당첨 등급 결정 (확률은 누적 확률이 아닌 개별 확률로 계산)
+      // 확률 기반 당첨 등급 결정 (행운숫자 일치하면 무조건 당첨)
       const random = Math.random();
       
       // 1등: 5억원 - 확률 1/5,000,000 (0.00002%)
@@ -85,13 +85,15 @@ export class LotteryLogic {
       }
     }
 
-    console.log('스크래치 결과 확인:', {
+    console.log('🎰 스크래치 결과 확인:', {
       userNumbers,
       luckyNumber,
       matches,
       matchCount,
       prize,
-      hasMatch: matchCount > 0
+      hasMatch: matchCount > 0,
+      '행운숫자와 일치하는 숫자가 있는가?': matchCount > 0 ? '예' : '아니오',
+      '당첨금': prize > 0 ? `${prize.toLocaleString()}원` : '없음'
     });
 
     return { matchingNumbers: matches, prize };
@@ -182,9 +184,6 @@ export function calculateLottoResult(userNumbers: number[], bonusNumber?: number
 
   return {
     winningNumbers: { main: winningMain, bonus: winningBonus },
-    userNumbers: { main: userNumbers, bonus: bonusNumber },
-    matches,
-    bonusMatch,
     rank,
     prize
   };
