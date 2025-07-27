@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowUpDown, BarChart3 } from 'lucide-react';
 import { LottoTicket, ScratchTicket, PensionTicket } from '@/types/lottery';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 
 interface LottoResultModalProps {
   open: boolean;
@@ -30,11 +30,11 @@ type ResultModalProps = LottoResultModalProps | ScratchResultModalProps | Pensio
 
 export default function ResultModal({ open, onOpenChange, tickets, type }: ResultModalProps) {
   const [sortByPrize, setSortByPrize] = useState(false);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   const handleAnalyze = () => {
     onOpenChange(false);
-    navigate('/stats');
+    setLocation('/stats');
   };
 
   const getTitle = () => {
