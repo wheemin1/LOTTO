@@ -91,7 +91,7 @@ export default function Home() {
           title="스피또1000"
           price="1,000원"
           description="즉석 스크래치 복권"
-          prize="1등 당첨금: 100만원"
+          prize="1등 당첨금: 50만원"
           feature="터치로 스크래치"
           color="red"
           onClick={() => setShowScratchModal(true)}
@@ -107,12 +107,24 @@ export default function Home() {
           </div>
           <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
             <div className="flex justify-between">
-              <span>1등 (100만원):</span>
-              <span>1/100,000</span>
+              <span>1등 (50만원):</span>
+              <span>1/5,000,000</span>
             </div>
             <div className="flex justify-between">
-              <span>2등 (10만원):</span>
-              <span>1/10,000</span>
+              <span>2등 (20만원):</span>
+              <span>1/1,000,000</span>
+            </div>
+            <div className="flex justify-between">
+              <span>3등 (1만원):</span>
+              <span>1/181.8</span>
+            </div>
+            <div className="flex justify-between">
+              <span>4등 (5천원):</span>
+              <span>1/40</span>
+            </div>
+            <div className="flex justify-between">
+              <span>5등 (1천원):</span>
+              <span>1/3.3</span>
             </div>
             <div className="flex justify-between">
               <span>3등 (1만원):</span>

@@ -43,37 +43,49 @@ export class LotteryLogic {
   // Scratch Logic
   static generateScratchTicket(): { userNumbers: number[], luckyNumbers: number[] } {
     const userNumbers: number[] = [];
-    const luckyNumbers: number[] = [];
-
+    
     // 사용자 번호 6개 생성 (1-20 범위)
     for (let i = 0; i < 6; i++) {
       userNumbers.push(cryptoRandom.randomInt(1, 20));
     }
 
-    // 행운 번호 3개 생성 (1-20 범위, 중복 제거)
-    while (luckyNumbers.length < 3) {
-      const num = cryptoRandom.randomInt(1, 20);
-      if (!luckyNumbers.includes(num)) {
-        luckyNumbers.push(num);
-      }
-    }
+    // 행운 번호 1개 생성 (1-20 범위)
+    const luckyNumbers = [cryptoRandom.randomInt(1, 20)];
 
     return { userNumbers, luckyNumbers };
   }
 
   static checkScratchResult(userNumbers: number[], luckyNumbers: number[]): ScratchResult {
-    const matches = userNumbers.filter(num => luckyNumbers.includes(num));
+    const luckyNumber = luckyNumbers[0];
+    const matches = userNumbers.filter(num => num === luckyNumber);
     const matchCount = matches.length;
 
     let prize = 0;
 
-    // 일치하는 숫자 개수에 따른 당첨금 (기존 확률과 동일하게 유지)
-    if (matchCount === 3) {
-      prize = 1000000; // 100만원
-    } else if (matchCount === 2) {
-      prize = 10000; // 1만원  
-    } else if (matchCount === 1) {
-      prize = 1000; // 1천원
+    // 이미지 기준 확률과 당첨금
+    const random = Math.random();
+    
+    if (matchCount >= 1) {
+      // 1등: 오십만원 (50만원) - 1/5,000,000
+      if (random < 1/5000000) {
+        prize = 500000;
+      }
+      // 2등: 이십만원 (20만원) - 1/1,000,000  
+      else if (random < 1/1000000) {
+        prize = 200000;
+      }
+      // 3등: 일만원 (1만원) - 1/181.8
+      else if (random < 1/181.8) {
+        prize = 10000;
+      }
+      // 4등: 오천원 (5천원) - 1/40
+      else if (random < 1/40) {
+        prize = 5000;
+      }
+      // 5등: 일천원 (1천원) - 1/3.3
+      else if (random < 1/3.3) {
+        prize = 1000;
+      }
     }
 
     return { matchingNumbers: matches, prize };

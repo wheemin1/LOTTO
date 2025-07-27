@@ -78,21 +78,16 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-6 text-white">
               <div className="text-center mb-4">
                 <h4 className="text-lg font-bold">스피또1000</h4>
-                <p className="text-sm opacity-90">행운숫자와 일치하는 나의 숫자를 찾으세요!</p>
+                <p className="text-sm opacity-90">행운숫자와 일치하는 나의 숫자 1개 이상을 찾으세요!</p>
               </div>
               
               {/* 행운숫자 표시 */}
               <div className="text-center mb-4">
                 <div className="text-xs opacity-80 mb-2">행운숫자</div>
-                <div className="flex justify-center space-x-2">
-                  {currentTicket.luckyNumbers.map((num, index) => (
-                    <div
-                      key={index}
-                      className="w-8 h-8 rounded-full bg-yellow-400 text-red-700 flex items-center justify-center text-sm font-bold"
-                    >
-                      {num}
-                    </div>
-                  ))}
+                <div className="flex justify-center">
+                  <div className="w-10 h-10 rounded-full bg-yellow-400 text-red-700 flex items-center justify-center text-lg font-bold">
+                    {currentTicket.luckyNumbers[0]}
+                  </div>
                 </div>
               </div>
               
