@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useLotteryStore } from '@/stores/lottery-store';
 import { useToast } from '@/hooks/use-toast';
 import ScratchArea from './scratch-area';
+import ResultModal from './result-modal';
+import { ScratchTicket } from '@/types/lottery';
 
 interface ScratchModalProps {
   open: boolean;
@@ -13,6 +15,8 @@ interface ScratchModalProps {
 
 export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) {
   const [ticketCount, setTicketCount] = useState(1);
+  const [showResults, setShowResults] = useState(false);
+  const [generatedTickets, setGeneratedTickets] = useState<ScratchTicket[]>([]);
   const { speetto1000, purchaseScratchTicket, scratchTicket } = useLotteryStore();
   const { toast } = useToast();
   
@@ -21,11 +25,10 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
   
   const handlePurchase = async () => {
     try {
-      await purchaseScratchTicket(ticketCount);
-      toast({
-        title: "생성 완료",
-        description: `스피또1000 ${ticketCount}매를 생성했습니다.`,
-      });
+      const newTickets = await purchaseScratchTicket(ticketCount);
+      setGeneratedTickets(newTickets);
+      setShowResults(true);
+      onOpenChange(false);
       setTicketCount(1);
     } catch (error) {
       toast({
@@ -62,6 +65,7 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
   };
   
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
@@ -141,5 +145,13 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
         </div>
       </DialogContent>
     </Dialog>
+    
+    <ResultModal
+      open={showResults}
+      onOpenChange={setShowResults}
+      tickets={generatedTickets}
+      type="scratch"
+    />
+    </>
   );
 }

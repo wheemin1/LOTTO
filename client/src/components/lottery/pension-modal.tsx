@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLotteryStore } from '@/stores/lottery-store';
 import { useToast } from '@/hooks/use-toast';
+import ResultModal from './result-modal';
+import { PensionTicket } from '@/types/lottery';
 
 interface PensionModalProps {
   open: boolean;
@@ -15,6 +17,8 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
   const [isAuto, setIsAuto] = useState(true);
   const [group, setGroup] = useState('');
   const [number, setNumber] = useState('');
+  const [showResults, setShowResults] = useState(false);
+  const [generatedTickets, setGeneratedTickets] = useState<PensionTicket[]>([]);
   const { purchasePensionTicket } = useLotteryStore();
   const { toast } = useToast();
   
@@ -30,11 +34,9 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
     
     try {
       const numbers = isAuto ? { group: '', number: '' } : { group, number };
-      await purchasePensionTicket(numbers, isAuto);
-      toast({
-        title: "생성 완료",
-        description: "연금복권720+을 생성했습니다.",
-      });
+      const newTickets = await purchasePensionTicket(numbers, isAuto);
+      setGeneratedTickets(newTickets);
+      setShowResults(true);
       onOpenChange(false);
       setGroup('');
       setNumber('');
@@ -48,6 +50,7 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
   };
   
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
@@ -156,5 +159,13 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
         </div>
       </DialogContent>
     </Dialog>
+    
+    <ResultModal
+      open={showResults}
+      onOpenChange={setShowResults}
+      tickets={generatedTickets}
+      type="pension"
+    />
+    </>
   );
 }

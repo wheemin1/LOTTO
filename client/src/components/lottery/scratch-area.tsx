@@ -17,11 +17,11 @@ export default function ScratchArea({ symbol, onReveal, disabled = false }: Scra
   }, [disabled, symbol.revealed]);
   
   const handleEnd = useCallback(() => {
-    setIsScratching(false);
-    if (!symbol.revealed) {
+    if (isScratching && !symbol.revealed) {
       onReveal(symbol.id);
     }
-  }, [symbol.revealed, symbol.id, onReveal]);
+    setIsScratching(false);
+  }, [isScratching, symbol.revealed, symbol.id, onReveal]);
   
   const handleMove = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (!isScratching || disabled || symbol.revealed) return;

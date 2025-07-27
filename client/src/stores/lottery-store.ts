@@ -6,9 +6,9 @@ import { LotteryLogic } from '@/lib/lottery-logic';
 
 interface LotteryStore extends LotteryState {
   // Actions
-  purchaseLottoTicket: (numbers: number[], isAuto: boolean, gameCount: number) => Promise<void>;
-  purchaseScratchTicket: (count: number) => Promise<void>;
-  purchasePensionTicket: (numbers: { group: string; number: string }, isAuto: boolean) => Promise<void>;
+  purchaseLottoTicket: (numbers: number[], isAuto: boolean, gameCount: number) => Promise<LottoTicket[]>;
+  purchaseScratchTicket: (count: number) => Promise<ScratchTicket[]>;
+  purchasePensionTicket: (numbers: { group: string; number: string }, isAuto: boolean) => Promise<PensionTicket[]>;
   
   scratchTicket: (ticketId: string, symbolIndex: number) => Promise<void>;
   
@@ -75,6 +75,7 @@ export const useLotteryStore = create<LotteryStore>()(
         }));
         
         get().calculateStats();
+        return tickets;
       },
 
       purchaseScratchTicket: async (count = 1) => {
@@ -105,6 +106,7 @@ export const useLotteryStore = create<LotteryStore>()(
         }));
         
         get().calculateStats();
+        return tickets;
       },
 
       purchasePensionTicket: async (numbers, isAuto) => {
@@ -134,6 +136,7 @@ export const useLotteryStore = create<LotteryStore>()(
         }));
         
         get().calculateStats();
+        return [ticket];
       },
 
       scratchTicket: async (ticketId, symbolIndex) => {

@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLotteryStore } from '@/stores/lottery-store';
 import { useToast } from '@/hooks/use-toast';
+import ResultModal from './result-modal';
+import { LottoTicket } from '@/types/lottery';
 
 interface LottoModalProps {
   open: boolean;
@@ -14,6 +16,8 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
   const [isAuto, setIsAuto] = useState(true);
   const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
   const [gameCount, setGameCount] = useState(1);
+  const [showResults, setShowResults] = useState(false);
+  const [generatedTickets, setGeneratedTickets] = useState<LottoTicket[]>([]);
   const { purchaseLottoTicket } = useLotteryStore();
   const { toast } = useToast();
   
@@ -36,11 +40,9 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
     }
     
     try {
-      await purchaseLottoTicket(selectedNumbers, isAuto, gameCount);
-      toast({
-        title: "생성 완료",
-        description: `로또 ${gameCount}게임을 생성했습니다.`,
-      });
+      const newTickets = await purchaseLottoTicket(selectedNumbers, isAuto, gameCount);
+      setGeneratedTickets(newTickets);
+      setShowResults(true);
       onOpenChange(false);
       setSelectedNumbers([]);
       setGameCount(1);
@@ -54,8 +56,9 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
   };
   
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>로또 6/45</DialogTitle>
         </DialogHeader>
@@ -123,7 +126,7 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
           
           {/* Game Count */}
           <div className="flex justify-between items-center">
-            <span className="text-gray-700 dark:text-gray-300">게임 수 (1장에 최대 5게임)</span>
+            <span className="text-gray-700 dark:text-gray-300">게임 수</span>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -137,20 +140,18 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
               <input
                 type="number"
                 min="1"
-                max="5"
                 value={gameCount}
                 onChange={(e) => {
-                  const value = Math.min(5, Math.max(1, parseInt(e.target.value) || 1));
+                  const value = Math.max(1, parseInt(e.target.value) || 1);
                   setGameCount(value);
                 }}
-                className="w-12 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-1 py-1"
+                className="w-16 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-1 py-1"
               />
               <Button
                 variant="outline"
                 size="icon"
                 className="w-8 h-8"
-                onClick={() => setGameCount(Math.min(5, gameCount + 1))}
-                disabled={gameCount >= 5}
+                onClick={() => setGameCount(gameCount + 1)}
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -168,5 +169,13 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
         </div>
       </DialogContent>
     </Dialog>
+    
+    <ResultModal
+      open={showResults}
+      onOpenChange={setShowResults}
+      tickets={generatedTickets}
+      type="lotto"
+    />
+    </>
   );
 }
