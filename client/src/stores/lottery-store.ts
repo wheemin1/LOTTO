@@ -83,17 +83,22 @@ export const useLotteryStore = create<LotteryStore>()(
         
         for (let i = 0; i < count; i++) {
           const { userNumbers, luckyNumbers } = LotteryLogic.generateScratchTicket();
+          
+          // 바로 결과 계산 (스피또는 생성과 동시에 결과가 결정됨)
+          const result = LotteryLogic.checkScratchResult(userNumbers, luckyNumbers);
+          
           const ticket: ScratchTicket = {
             id: crypto.randomUUID(),
             symbols: userNumbers.map((number, index) => ({
               id: `${crypto.randomUUID()}-${index}`,
-              symbol: '❓', // 초기에는 물음표로 표시
+              symbol: '❓',
               number,
-              revealed: false,
+              revealed: true, // 바로 모든 숫자를 공개
             })),
             luckyNumbers,
             purchaseDate: new Date(),
-            isComplete: false,
+            isComplete: true, // 바로 완료 상태
+            result, // 당첨 결과 바로 포함
           };
           
           tickets.push(ticket);

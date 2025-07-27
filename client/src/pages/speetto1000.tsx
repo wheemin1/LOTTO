@@ -88,19 +88,24 @@ export default function Speetto1000() {
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-6 gap-2 max-w-xs">
-                        {ticket.symbols.map((symbol) => (
-                          <div
-                            key={symbol.id}
-                            className={`aspect-square rounded-lg flex items-center justify-center text-2xl ${
-                              symbol.revealed 
-                                ? 'bg-gray-100 dark:bg-gray-700' 
-                                : 'scratch-area bg-gray-300'
-                            }`}
-                          >
-                            {symbol.revealed ? symbol.symbol : '?'}
-                          </div>
-                        ))}
+                      <div className="space-y-2">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          행운숫자: {ticket.luckyNumbers.join(', ')}
+                        </div>
+                        <div className="grid grid-cols-6 gap-2 max-w-xs">
+                          {ticket.symbols.map((symbol) => (
+                            <div
+                              key={symbol.id}
+                              className={`aspect-square rounded-lg flex items-center justify-center text-lg font-bold ${
+                                ticket.luckyNumbers.includes(symbol.number)
+                                  ? 'bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200'
+                                  : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
+                              }`}
+                            >
+                              {symbol.number}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     
@@ -113,9 +118,9 @@ export default function Speetto1000() {
                           <div className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
                             {ticket.result.prize.toLocaleString()}원
                           </div>
-                          {ticket.result.matchingSymbols.length > 0 && (
+                          {ticket.result.matchingNumbers.length > 0 && (
                             <div className="text-sm text-yellow-600 dark:text-yellow-400 mt-1 font-medium">
-                              {ticket.result.matchingSymbols.join(' ')} 매치
+                              일치: {ticket.result.matchingNumbers.join(', ')}
                             </div>
                           )}
                         </div>

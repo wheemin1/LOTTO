@@ -101,32 +101,56 @@ export class LotteryLogic {
 
   // Pension 720+ Logic
   static generatePensionNumbers(): PensionNumbers {
-    const group = cryptoRandom.randomInt(1000000, 9999999).toString();
-    const number = cryptoRandom.randomInt(1000000, 9999999).toString();
+    const group = cryptoRandom.randomInt(1, 5).toString(); // 1-5조
+    const number = cryptoRandom.randomInt(100000, 999999).toString(); // 6자리 번호
 
     return { group, number };
   }
 
   static checkPensionResult(playerNumbers: PensionNumbers, winningNumbers: PensionNumbers): PensionResult {
-    const groupMatch = playerNumbers.group === winningNumbers.group;
-    const numberMatch = playerNumbers.number === winningNumbers.number;
+    const playerNumber = playerNumbers.number;
+    const winningNumber = winningNumbers.number;
+    
+    // 뒤에서부터 일치하는 자리수 확인 (연금복권720+ 방식)
+    let matchCount = 0;
+    for (let i = 0; i < 6; i++) {
+      const playerDigit = playerNumber[5 - i];
+      const winningDigit = winningNumber[5 - i];
+      if (playerDigit === winningDigit) {
+        matchCount++;
+      } else {
+        break; // 연속으로 일치해야 함
+      }
+    }
 
     let rank = 0;
     let monthlyPrize = 0;
     let totalPrize = 0;
 
-    if (groupMatch && numberMatch) {
+    // 연금복권720+ 당첨 기준
+    if (matchCount === 6) {
       rank = 1;
       monthlyPrize = 7000000; // 월 700만원
       totalPrize = monthlyPrize * 12 * 20; // 20년
-    } else if (numberMatch) {
+    } else if (matchCount === 5) {
       rank = 2;
-      monthlyPrize = 1000000; // 월 100만원
+      monthlyPrize = 1000000; // 월 100만원  
       totalPrize = monthlyPrize * 12 * 10; // 10년
-    } else if (groupMatch) {
+    } else if (matchCount === 4) {
       rank = 3;
-      monthlyPrize = 0;
+      totalPrize = 10000000; // 일시불 1천만원
+    } else if (matchCount === 3) {
+      rank = 4;
+      totalPrize = 5000000; // 일시불 500만원
+    } else if (matchCount === 2) {
+      rank = 5;
       totalPrize = 1000000; // 일시불 100만원
+    } else if (matchCount === 1) {
+      rank = 6;
+      totalPrize = 100000; // 일시불 10만원
+    } else if (matchCount === 0 && playerNumbers.group === winningNumbers.group) {
+      rank = 7;
+      totalPrize = 10000; // 일시불 1만원 (조 일치)
     }
 
     return { winningNumbers, rank, monthlyPrize, totalPrize };

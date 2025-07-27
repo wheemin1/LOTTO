@@ -23,10 +23,10 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
   const { toast } = useToast();
   
   const handlePurchase = async () => {
-    if (!isAuto && (group.length !== 7 || number.length !== 7)) {
+    if (!isAuto && (group.length !== 1 || number.length !== 6)) {
       toast({
         title: "번호 입력 오류",
-        description: "조와 번호를 각각 7자리로 입력해주세요.",
+        description: "조는 1-5 중 선택하고, 번호는 6자리로 입력해주세요.",
         variant: "destructive",
       });
       return;
@@ -80,29 +80,30 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
           {!isAuto && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="group">조 (7자리)</Label>
-                <Input
-                  id="group"
-                  type="text"
-                  placeholder="1234567"
-                  value={group}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '').slice(0, 7);
-                    setGroup(value);
-                  }}
-                  className="font-mono text-center text-lg"
-                />
+                <Label htmlFor="group">조 선택 (1-5)</Label>
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <Button
+                      key={num}
+                      variant={group === num.toString() ? "default" : "outline"}
+                      className="flex-1"
+                      onClick={() => setGroup(num.toString())}
+                    >
+                      {num}조
+                    </Button>
+                  ))}
+                </div>
               </div>
               
               <div>
-                <Label htmlFor="number">번 (7자리)</Label>
+                <Label htmlFor="number">번호 (6자리)</Label>
                 <Input
                   id="number"
                   type="text"
-                  placeholder="8901234"
+                  placeholder="123456"
                   value={number}
                   onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '').slice(0, 7);
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
                     setNumber(value);
                   }}
                   className="font-mono text-center text-lg"

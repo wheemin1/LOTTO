@@ -42,8 +42,8 @@ export interface ScratchResult {
 }
 
 export interface PensionNumbers {
-  group: string;
-  number: string;
+  group: string; // 조 (1-5)
+  number: string; // 6자리 번호
 }
 
 export interface PensionTicket {
