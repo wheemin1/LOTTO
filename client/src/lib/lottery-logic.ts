@@ -42,12 +42,8 @@ export class LotteryLogic {
 
   // Scratch Logic
   static generateScratchTicket(): { userNumbers: number[], luckyNumbers: number[] } {
-    const userNumbers: number[] = [];
-    
-    // 사용자 번호 6개 생성 (1-9 범위)
-    for (let i = 0; i < 6; i++) {
-      userNumbers.push(cryptoRandom.randomInt(1, 9));
-    }
+    // 사용자 번호 6개 생성 (1-9 범위, 중복 없음)
+    const userNumbers = cryptoRandom.uniqueRandomInts(6, 1, 9);
 
     // 행운 번호 1개 생성 (1-9 범위)
     const luckyNumbers = [cryptoRandom.randomInt(1, 9)];
@@ -63,8 +59,8 @@ export class LotteryLogic {
     let prize = 0;
     const random = Math.random();
 
-    // 행운숫자와 일치하는 숫자가 있거나, 확률적으로 당첨 판정
-    if (matchCount > 0 || random < 1/3.3) {
+    // 행운숫자와 일치하는 숫자가 있으면 무조건 당첨
+    if (matchCount > 0) {
       // 당첨 등급 결정
       // 1등: 5억원 - 1/5,000,000
       if (random < 1/5000000) {
@@ -82,20 +78,28 @@ export class LotteryLogic {
       else if (random < 1/40) {
         prize = 5000;
       }
-      // 5등: 1천원 (기본 당첨금)
+      // 5등: 1천원 (기본 당첨금 - 행운숫자 일치시 최소 보장)
       else {
         prize = 1000;
       }
     }
-
-    // 당첨된 경우 매칭 숫자 보장
-    const finalMatches = [...matches];
-    if (prize > 0 && finalMatches.length === 0) {
-      // 당첨됐는데 일치하는 숫자가 없으면 행운숫자를 매칭으로 처리
-      finalMatches.push(luckyNumber);
+    // 행운숫자와 일치하지 않아도 확률적으로 당첨 가능 (1/3.3 확률)
+    else if (random < 1/3.3) {
+      // 당첨 등급 결정 (더 낮은 확률로)
+      if (random < 1/10000000) {
+        prize = 500000000;
+      } else if (random < 1/2000000) {
+        prize = 20000000;
+      } else if (random < 1/500) {
+        prize = 10000;
+      } else if (random < 1/100) {
+        prize = 5000;
+      } else {
+        prize = 1000;
+      }
     }
 
-    return { matchingNumbers: finalMatches, prize };
+    return { matchingNumbers: matches, prize };
   }
 
   // Pension 720+ Logic
