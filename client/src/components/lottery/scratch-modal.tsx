@@ -73,52 +73,6 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
         </DialogHeader>
         
         <div className="space-y-6">
-          {/* Current Scratch Card */}
-          {currentTicket && !currentTicket.isComplete && (
-            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-6 text-white">
-              <div className="text-center mb-4">
-                <h4 className="text-lg font-bold">스피또1000</h4>
-                <p className="text-sm opacity-90">행운숫자와 일치하는 나의 숫자 1개 이상을 찾으세요!</p>
-              </div>
-              
-              {/* 행운숫자 표시 */}
-              <div className="text-center mb-4">
-                <div className="text-xs opacity-80 mb-2">행운숫자</div>
-                <div className="flex justify-center">
-                  <div className="w-10 h-10 rounded-full bg-yellow-400 text-red-700 flex items-center justify-center text-lg font-bold">
-                    {currentTicket.luckyNumbers[0]}
-                  </div>
-                </div>
-              </div>
-              
-              {/* 나의 숫자 (스크래치 영역) */}
-              <div className="text-center mb-2">
-                <div className="text-xs opacity-80">나의 숫자</div>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {currentTicket.symbols.map((symbol) => (
-                  <ScratchArea
-                    key={symbol.id}
-                    symbol={symbol}
-                    onReveal={handleReveal}
-                  />
-                ))}
-              </div>
-              
-              {currentTicket.isComplete && currentTicket.result && (
-                <div className="text-center mt-4">
-                  {currentTicket.result.prize > 0 ? (
-                    <div className="text-yellow-300 font-bold">
-                      당첨! {currentTicket.result.prize.toLocaleString()}원
-                    </div>
-                  ) : (
-                    <div className="opacity-75">다음 기회에!</div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          
           {/* Purchase Options */}
           <div className="space-y-4">
             {/* Ticket Count */}
