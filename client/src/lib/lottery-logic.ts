@@ -85,6 +85,14 @@ export class LotteryLogic {
       }
     }
 
+    console.log('스크래치 결과 확인:', {
+      userNumbers,
+      luckyNumber,
+      matches,
+      matchCount,
+      prize
+    });
+
     return { matchingNumbers: matches, prize };
   }
 
