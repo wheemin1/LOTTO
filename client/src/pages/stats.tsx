@@ -2,11 +2,15 @@ import { useEffect, useState } from 'react';
 import { useLotteryStore } from '@/stores/lottery-store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Share2, Download, RotateCcw } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import { LottoTicket } from '@/types/lottery';
 
 export default function Stats() {
-  const { lotto645, speetto1000, pension720, loadTickets } = useLotteryStore();
+  const { lotto645, speetto1000, pension720, loadTickets, clearAllData } = useLotteryStore();
   const [activeTab, setActiveTab] = useState('lotto');
+  const { toast } = useToast();
 
   useEffect(() => {
     loadTickets();
@@ -42,11 +46,99 @@ export default function Stats() {
   const totalWins = lotto645.stats.winCount + speetto1000.stats.winCount + pension720.stats.winCount;
   const overallROI = totalSpent > 0 ? ((totalWon - totalSpent) / totalSpent) * 100 : 0;
 
+  // URL 공유 함수
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "링크 복사됨",
+        description: "통계 페이지 링크가 클립보드에 복사되었습니다.",
+      });
+    } catch (error) {
+      toast({
+        title: "복사 실패",
+        description: "링크 복사에 실패했습니다.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // 데이터 저장 함수 (CSV 다운로드)
+  const handleSave = () => {
+    const csvData = [
+      ['복권종류', '총구매', '총당첨', '당첨횟수', '당첨률', '수익률'],
+      ['로또6/45', lotto645.stats.totalTickets, `₩${lotto645.stats.totalWon.toLocaleString()}`, lotto645.stats.winCount, `${lotto645.stats.winRate.toFixed(1)}%`, `${lotto645.stats.roi.toFixed(1)}%`],
+      ['스피또1000', speetto1000.stats.totalTickets, `₩${speetto1000.stats.totalWon.toLocaleString()}`, speetto1000.stats.winCount, `${speetto1000.stats.winRate.toFixed(1)}%`, `${speetto1000.stats.roi.toFixed(1)}%`],
+      ['연금복권720+', pension720.stats.totalTickets, `₩${pension720.stats.totalWon.toLocaleString()}`, pension720.stats.winCount, `${pension720.stats.winRate.toFixed(1)}%`, `${pension720.stats.roi.toFixed(1)}%`],
+    ];
+
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', '복권통계.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "저장 완료",
+      description: "통계 데이터가 CSV 파일로 저장되었습니다.",
+    });
+  };
+
+  // 데이터 리셋 함수
+  const handleReset = () => {
+    if (window.confirm('모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+      clearAllData();
+      toast({
+        title: "데이터 초기화",
+        description: "모든 복권 데이터가 삭제되었습니다.",
+      });
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">통계</h1>
-        <p className="text-gray-600 dark:text-gray-400">복권 구매 및 당첨 통계를 확인하세요</p>
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">통계</h1>
+            <p className="text-gray-600 dark:text-gray-400">복권 구매 및 당첨 통계를 확인하세요</p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShare}
+              className="flex items-center gap-2"
+            >
+              <Share2 className="w-4 h-4" />
+              공유
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSave}
+              className="flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              저장
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:border-red-300"
+            >
+              <RotateCcw className="w-4 h-4" />
+              리셋
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* 전체 현황 - 상단 */}
