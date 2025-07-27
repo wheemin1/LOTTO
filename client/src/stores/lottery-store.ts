@@ -1,0 +1,275 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { LotteryState, LottoTicket, ScratchTicket, PensionTicket, PurchaseStats } from '@/types/lottery';
+import { db } from '@/lib/database';
+import { LotteryLogic } from '@/lib/lottery-logic';
+
+interface LotteryStore extends LotteryState {
+  // Actions
+  purchaseLottoTicket: (numbers: number[], isAuto: boolean, gameCount: number) => Promise<void>;
+  purchaseScratchTicket: (count: number) => Promise<void>;
+  purchasePensionTicket: (numbers: { group: string; number: string }, isAuto: boolean) => Promise<void>;
+  
+  scratchTicket: (ticketId: string, symbolIndex: number) => Promise<void>;
+  
+  loadTickets: () => Promise<void>;
+  calculateStats: () => void;
+  clearAllData: () => Promise<void>;
+  exportData: () => Promise<string>;
+}
+
+const initialStats: PurchaseStats = {
+  totalSpent: 0,
+  totalWon: 0,
+  totalTickets: 0,
+  winCount: 0,
+  winRate: 0,
+  roi: 0,
+};
+
+export const useLotteryStore = create<LotteryStore>()(
+  persist(
+    (set, get) => ({
+      lotto645: {
+        tickets: [],
+        stats: { ...initialStats },
+      },
+      speetto1000: {
+        tickets: [],
+        stats: { ...initialStats },
+      },
+      pension720: {
+        tickets: [],
+        stats: { ...initialStats },
+      },
+
+      purchaseLottoTicket: async (numbers, isAuto, gameCount = 1) => {
+        const tickets: LottoTicket[] = [];
+        
+        for (let i = 0; i < gameCount; i++) {
+          const ticketNumbers = isAuto 
+            ? LotteryLogic.generateLottoNumbers()
+            : { main: numbers, bonus: numbers[6] };
+          
+          const ticket: LottoTicket = {
+            id: crypto.randomUUID(),
+            numbers: ticketNumbers,
+            isAuto,
+            purchaseDate: new Date(),
+            drawDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Next week
+          };
+          
+          // Simulate draw immediately for demo
+          const winningNumbers = LotteryLogic.generateLottoNumbers();
+          ticket.result = LotteryLogic.checkLottoResult(ticket.numbers, winningNumbers);
+          
+          tickets.push(ticket);
+          await db.saveLottoTicket(ticket);
+        }
+        
+        set(state => ({
+          lotto645: {
+            ...state.lotto645,
+            tickets: [...tickets, ...state.lotto645.tickets],
+          },
+        }));
+        
+        get().calculateStats();
+      },
+
+      purchaseScratchTicket: async (count = 1) => {
+        const tickets: ScratchTicket[] = [];
+        
+        for (let i = 0; i < count; i++) {
+          const symbols = LotteryLogic.generateScratchTicket();
+          const ticket: ScratchTicket = {
+            id: crypto.randomUUID(),
+            symbols: symbols.map((symbol, index) => ({
+              id: `${crypto.randomUUID()}-${index}`,
+              symbol,
+              revealed: false,
+            })),
+            purchaseDate: new Date(),
+            isComplete: false,
+          };
+          
+          tickets.push(ticket);
+          await db.saveScratchTicket(ticket);
+        }
+        
+        set(state => ({
+          speetto1000: {
+            ...state.speetto1000,
+            tickets: [...tickets, ...state.speetto1000.tickets],
+          },
+        }));
+        
+        get().calculateStats();
+      },
+
+      purchasePensionTicket: async (numbers, isAuto) => {
+        const ticketNumbers = isAuto 
+          ? LotteryLogic.generatePensionNumbers()
+          : numbers;
+        
+        const ticket: PensionTicket = {
+          id: crypto.randomUUID(),
+          numbers: ticketNumbers,
+          isAuto,
+          purchaseDate: new Date(),
+          drawDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        };
+        
+        // Simulate draw
+        const winningNumbers = LotteryLogic.generatePensionNumbers();
+        ticket.result = LotteryLogic.checkPensionResult(ticket.numbers, winningNumbers);
+        
+        await db.savePensionTicket(ticket);
+        
+        set(state => ({
+          pension720: {
+            ...state.pension720,
+            tickets: [ticket, ...state.pension720.tickets],
+          },
+        }));
+        
+        get().calculateStats();
+      },
+
+      scratchTicket: async (ticketId, symbolIndex) => {
+        set(state => ({
+          speetto1000: {
+            ...state.speetto1000,
+            tickets: state.speetto1000.tickets.map(ticket => {
+              if (ticket.id === ticketId) {
+                const updatedSymbols = ticket.symbols.map((symbol, index) => 
+                  index === symbolIndex ? { ...symbol, revealed: true } : symbol
+                );
+                
+                const allRevealed = updatedSymbols.every(s => s.revealed);
+                let result = ticket.result;
+                
+                if (allRevealed && !result) {
+                  const symbols = updatedSymbols.map(s => s.symbol);
+                  result = LotteryLogic.checkScratchResult(symbols);
+                }
+                
+                const updatedTicket = {
+                  ...ticket,
+                  symbols: updatedSymbols,
+                  isComplete: allRevealed,
+                  result,
+                };
+                
+                db.saveScratchTicket(updatedTicket);
+                return updatedTicket;
+              }
+              return ticket;
+            }),
+          },
+        }));
+        
+        get().calculateStats();
+      },
+
+      loadTickets: async () => {
+        const [lottoTickets, scratchTickets, pensionTickets] = await Promise.all([
+          db.getLottoTickets(),
+          db.getScratchTickets(),
+          db.getPensionTickets(),
+        ]);
+        
+        set({
+          lotto645: { tickets: lottoTickets, stats: { ...initialStats } },
+          speetto1000: { tickets: scratchTickets, stats: { ...initialStats } },
+          pension720: { tickets: pensionTickets, stats: { ...initialStats } },
+        });
+        
+        get().calculateStats();
+      },
+
+      calculateStats: () => {
+        const state = get();
+        
+        // Calculate Lotto 6/45 stats
+        const lottoStats: PurchaseStats = {
+          totalSpent: state.lotto645.tickets.length * 1000,
+          totalWon: state.lotto645.tickets.reduce((sum, ticket) => 
+            sum + (ticket.result?.prize || 0), 0),
+          totalTickets: state.lotto645.tickets.length,
+          winCount: state.lotto645.tickets.filter(ticket => 
+            ticket.result && ticket.result.prize > 0).length,
+          winRate: 0,
+          roi: 0,
+        };
+        
+        if (lottoStats.totalTickets > 0) {
+          lottoStats.winRate = (lottoStats.winCount / lottoStats.totalTickets) * 100;
+          lottoStats.roi = ((lottoStats.totalWon - lottoStats.totalSpent) / lottoStats.totalSpent) * 100;
+        }
+        
+        // Calculate Scratch stats
+        const scratchStats: PurchaseStats = {
+          totalSpent: state.speetto1000.tickets.length * 1000,
+          totalWon: state.speetto1000.tickets.reduce((sum, ticket) => 
+            sum + (ticket.result?.prize || 0), 0),
+          totalTickets: state.speetto1000.tickets.length,
+          winCount: state.speetto1000.tickets.filter(ticket => 
+            ticket.result && ticket.result.prize > 0).length,
+          winRate: 0,
+          roi: 0,
+        };
+        
+        if (scratchStats.totalTickets > 0) {
+          scratchStats.winRate = (scratchStats.winCount / scratchStats.totalTickets) * 100;
+          scratchStats.roi = ((scratchStats.totalWon - scratchStats.totalSpent) / scratchStats.totalSpent) * 100;
+        }
+        
+        // Calculate Pension stats
+        const pensionStats: PurchaseStats = {
+          totalSpent: state.pension720.tickets.length * 720,
+          totalWon: state.pension720.tickets.reduce((sum, ticket) => 
+            sum + (ticket.result?.totalPrize || 0), 0),
+          totalTickets: state.pension720.tickets.length,
+          winCount: state.pension720.tickets.filter(ticket => 
+            ticket.result && ticket.result.totalPrize > 0).length,
+          winRate: 0,
+          roi: 0,
+        };
+        
+        if (pensionStats.totalTickets > 0) {
+          pensionStats.winRate = (pensionStats.winCount / pensionStats.totalTickets) * 100;
+          pensionStats.roi = ((pensionStats.totalWon - pensionStats.totalSpent) / pensionStats.totalSpent) * 100;
+        }
+        
+        set({
+          lotto645: { ...state.lotto645, stats: lottoStats },
+          speetto1000: { ...state.speetto1000, stats: scratchStats },
+          pension720: { ...state.pension720, stats: pensionStats },
+        });
+      },
+
+      clearAllData: async () => {
+        await db.clearAllData();
+        set({
+          lotto645: { tickets: [], stats: { ...initialStats } },
+          speetto1000: { tickets: [], stats: { ...initialStats } },
+          pension720: { tickets: [], stats: { ...initialStats } },
+        });
+      },
+
+      exportData: async () => {
+        return await db.exportData();
+      },
+    }),
+    {
+      name: 'lottery-store',
+      partialize: (state) => ({
+        // Only persist basic data, not the full tickets (they're in IndexedDB)
+        lotto645: { tickets: [], stats: state.lotto645.stats },
+        speetto1000: { tickets: [], stats: state.speetto1000.stats },
+        pension720: { tickets: [], stats: state.pension720.stats },
+      }),
+    }
+  )
+);
