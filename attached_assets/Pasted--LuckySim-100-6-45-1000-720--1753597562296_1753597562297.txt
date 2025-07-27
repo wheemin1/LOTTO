@@ -1,0 +1,119 @@
+💡 프로젝트 개요
+프로젝트 명: LuckySim
+
+설명: 서버가 전혀 없는 100 % 클라이언트-사이드 복권(로또 6/45, 스피또1000, 연금복권 720+) 시뮬레이터.
+
+자동·수동 번호 선택, 스크래치 제스처, 대량 구매·통계 대시보드, 오프라인-PWA, CSV/PNG/SNS 공유 지원.
+
+목표 플랫폼: Web + Mobile PWA (SPA).
+
+운영 환경: 완전 오프라인 동작(필요 시 네트워크 광고만).
+
+호스팅: Netlify 정적 배포.
+
+🖥️ 기술 스택
+범주	선택 기술
+언어	TypeScript (ES2022)
+프레임워크/번들러	React 18 + Vite, React Router v6
+상태 관리	Zustand (가능하면 Jotai 병행)
+데이터 저장	IndexedDB(Dexie) + Crypto.subtle AES-GCM 옵션
+시각화	Recharts·D3.js
+스타일	Tailwind CSS + CSS Modules
+테스트	Jest, React Testing Library, Playwright e2e
+품질 도구	ESLint, Prettier, Husky(Git hook)
+
+🔑 핵심 기능 · 모듈
+공통
+
+Web Crypto API 난수 → 각 복권 규칙 적용 (검증용 SHA-256 시드 공개).
+
+복권별 OMR·스크래치 UI (Canvas/SVG/WebGL) + 모바일 터치·키보드 접근성(WAI-ARIA).
+
+Service Worker + Cache Storage로 오프라인 캐싱, PWA 매니페스트.
+
+Web Worker로 대량 구매·통계 연산 분리.
+
+로또 6/45
+
+1–45 중 6개 + 보너스, 줄(₩1,000)/장(≤5줄) 단위.
+
+추첨 애니메이션·결과 팝업, ROI·빈도 그래프.
+
+스피또1000
+
+즉석 스크래치: 가상 코인 드래그, 입체 음향.
+
+장수 입력 후 티켓 갤러리·스크래치 → 당첨/누적 현황.
+
+연금복권 720+
+
+7자리×2열(자동·수동·반자동) → 월지급 시뮬레이터, 캐시플로 그래프.
+
+대시보드
+
+D3/Recharts로 번호·수익률·확률 비교 시각화, IndexedDB 영속화.
+
+내보내기 & 공유
+
+CSV(UTF-8)·PNG 다운로드, OG 태그 포함 SNS 링크 공유.
+
+수익 모델
+
+네트워크 연결 시에만 Google AdSense for PWA 광고 슬롯 표시.
+
+🎨 인터페이스 스타일
+카드형 홈(3종 복권 선택) ⇒ 각 시뮬레이터 라우팅.
+
+미니멀·가독성 중심, 다크 모드, 고대비 모드.
+
+반응형(모바일 우선) + 키보드 내비게이션 + 스크린리더 라벨링.
+
+🚀 개발·배포 파이프라인
+npm scripts
+
+bash
+복사
+편집
+dev      # vite dev --open
+build    # vite build
+preview  # vite preview
+test     # jest
+e2e      # playwright test
+Netlify
+
+빌드 명령: npm run build
+
+퍼블릭 폴더: dist
+
+PR Preview / Deploy Hook 사용.
+
+Git
+
+main → Netlify 프로덕션, dev → 프리뷰.
+
+Husky pre-commit: ESLint & prettier --check.
+
+📄 TODO 초기 작업 목록
+Vite + React + TypeScript 템플릿 세팅, Tailwind CSS 통합.
+
+PWA 플러그인(vite-plugin-pwa) 구성: manifest, service-worker runtime caching.
+
+전역 Zustand store 설계(복권 타입, 구매내역, 통계, 설정).
+
+홈 → 3종 카드 라우팅 레이아웃 구현.
+
+로또 6/45 OMR 컴포넌트부터 MVP 개발 후 다른 복권 모듈 확장.
+
+IndexedDB(Dexie) 스키마 정의 & 마이그레이션 헬퍼 작성.
+
+Jest + React-Testing-Library 기본 렌더링 테스트 추가.
+
+Netlify CI /CD 파이프라인 연결 및 자동 프리뷰 검증.
+
+🔤 언어 설정
+Replit Agent와의 대화: 한국어
+
+애플리케이션 UI: 기본 한국어, 추후 i18n 확장 가능 구조로 설계
+
+✅ Replit Agent Action
+이 사양에 맞춰 프론트엔드만 구현되는 React+Vite SPA를 작성하고, dist/ 산출물이 Netlify에 그대로 업로드될 수 있도록 프로젝트를 세팅해 주세요.
