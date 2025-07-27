@@ -90,7 +90,11 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
                   key={num}
                   variant={selectedNumbers.includes(num) ? "default" : "outline"}
                   size="sm"
-                  className="aspect-square p-0 text-xs"
+                  className={`aspect-square p-0 text-xs ${
+                    selectedNumbers.includes(num) 
+                      ? "bg-blue-600 hover:bg-blue-700 text-black font-bold" 
+                      : ""
+                  }`}
                   onClick={() => toggleNumber(num)}
                 >
                   {num}
@@ -140,18 +144,20 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
               <input
                 type="number"
                 min="1"
+                max="5000"
                 value={gameCount}
                 onChange={(e) => {
-                  const value = Math.max(1, parseInt(e.target.value) || 1);
+                  const value = Math.min(5000, Math.max(1, parseInt(e.target.value) || 1));
                   setGameCount(value);
                 }}
-                className="w-16 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-1 py-1"
+                className="w-20 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
               />
               <Button
                 variant="outline"
                 size="icon"
                 className="w-8 h-8"
-                onClick={() => setGameCount(gameCount + 1)}
+                onClick={() => setGameCount(Math.min(5000, gameCount + 1))}
+                disabled={gameCount >= 5000}
               >
                 <Plus className="w-4 h-4" />
               </Button>

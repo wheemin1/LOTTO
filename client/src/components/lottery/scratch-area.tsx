@@ -46,11 +46,11 @@ export default function ScratchArea({ symbol, onReveal, disabled = false }: Scra
       onTouchMove={handleMove}
     >
       <div
-        className={`absolute inset-0 flex items-center justify-center text-4xl transition-opacity duration-300 ${
+        className={`absolute inset-0 flex items-center justify-center text-lg font-bold transition-opacity duration-300 ${
           symbol.revealed ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        {symbol.symbol}
+        {symbol.revealed ? symbol.number : symbol.symbol}
       </div>
       
       {!symbol.revealed && (

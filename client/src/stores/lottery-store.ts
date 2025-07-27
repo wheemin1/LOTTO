@@ -82,14 +82,16 @@ export const useLotteryStore = create<LotteryStore>()(
         const tickets: ScratchTicket[] = [];
         
         for (let i = 0; i < count; i++) {
-          const symbols = LotteryLogic.generateScratchTicket();
+          const { userNumbers, luckyNumbers } = LotteryLogic.generateScratchTicket();
           const ticket: ScratchTicket = {
             id: crypto.randomUUID(),
-            symbols: symbols.map((symbol, index) => ({
+            symbols: userNumbers.map((number, index) => ({
               id: `${crypto.randomUUID()}-${index}`,
-              symbol,
+              symbol: '❓', // 초기에는 물음표로 표시
+              number,
               revealed: false,
             })),
+            luckyNumbers,
             purchaseDate: new Date(),
             isComplete: false,
           };
@@ -153,8 +155,8 @@ export const useLotteryStore = create<LotteryStore>()(
                 let result = ticket.result;
                 
                 if (allRevealed && !result) {
-                  const symbols = updatedSymbols.map(s => s.symbol);
-                  result = LotteryLogic.checkScratchResult(symbols);
+                  const userNumbers = updatedSymbols.map(s => s.number);
+                  result = LotteryLogic.checkScratchResult(userNumbers, ticket.luckyNumbers);
                 }
                 
                 const updatedTicket = {

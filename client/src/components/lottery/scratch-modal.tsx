@@ -78,9 +78,28 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
             <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-6 text-white">
               <div className="text-center mb-4">
                 <h4 className="text-lg font-bold">스피또1000</h4>
-                <p className="text-sm opacity-90">같은 그림 3개를 찾으세요!</p>
+                <p className="text-sm opacity-90">행운숫자와 일치하는 나의 숫자를 찾으세요!</p>
               </div>
               
+              {/* 행운숫자 표시 */}
+              <div className="text-center mb-4">
+                <div className="text-xs opacity-80 mb-2">행운숫자</div>
+                <div className="flex justify-center space-x-2">
+                  {currentTicket.luckyNumbers.map((num, index) => (
+                    <div
+                      key={index}
+                      className="w-8 h-8 rounded-full bg-yellow-400 text-red-700 flex items-center justify-center text-sm font-bold"
+                    >
+                      {num}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* 나의 숫자 (스크래치 영역) */}
+              <div className="text-center mb-2">
+                <div className="text-xs opacity-80">나의 숫자</div>
+              </div>
               <div className="grid grid-cols-3 gap-2">
                 {currentTicket.symbols.map((symbol) => (
                   <ScratchArea
@@ -120,13 +139,23 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
                 >
                   <Minus className="w-4 h-4" />
                 </Button>
-                <span className="w-8 text-center font-mono">{ticketCount}</span>
+                <input
+                  type="number"
+                  min="1"
+                  max="1000"
+                  value={ticketCount}
+                  onChange={(e) => {
+                    const value = Math.min(1000, Math.max(1, parseInt(e.target.value) || 1));
+                    setTicketCount(value);
+                  }}
+                  className="w-16 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-1 py-1"
+                />
                 <Button
                   variant="outline"
                   size="icon"
                   className="w-8 h-8"
-                  onClick={() => setTicketCount(Math.min(10, ticketCount + 1))}
-                  disabled={ticketCount >= 10}
+                  onClick={() => setTicketCount(Math.min(1000, ticketCount + 1))}
+                  disabled={ticketCount >= 1000}
                 >
                   <Plus className="w-4 h-4" />
                 </Button>

@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ArrowUpDown } from 'lucide-react';
 import { LottoTicket, ScratchTicket, PensionTicket } from '@/types/lottery';
 
 interface LottoResultModalProps {
@@ -26,6 +28,8 @@ interface PensionResultModalProps {
 type ResultModalProps = LottoResultModalProps | ScratchResultModalProps | PensionResultModalProps;
 
 export default function ResultModal({ open, onOpenChange, tickets, type }: ResultModalProps) {
+  const [sortByPrize, setSortByPrize] = useState(false);
+
   const getTitle = () => {
     switch (type) {
       case 'lotto': return '로또 6/45 결과';
@@ -34,9 +38,20 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
     }
   };
 
+  const getSortedTickets = () => {
+    if (!sortByPrize) return tickets;
+    
+    return [...tickets].sort((a, b) => {
+      const prizeA = (a as any).result?.prize || 0;
+      const prizeB = (b as any).result?.prize || 0;
+      return prizeB - prizeA; // 높은 금액부터
+    });
+  };
+
   const renderLottoResults = (lottoTickets: LottoTicket[]) => {
     const winningTickets = lottoTickets.filter(t => t.result && t.result.rank > 0);
     const totalPrize = lottoTickets.reduce((sum, t) => sum + (t.result?.prize || 0), 0);
+    const sortedTickets = getSortedTickets() as LottoTicket[];
 
     return (
       <div className="space-y-4">
@@ -55,8 +70,20 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
           )}
         </div>
 
+        <div className="flex justify-center mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSortByPrize(!sortByPrize)}
+            className="text-xs"
+          >
+            <ArrowUpDown className="w-3 h-3 mr-1" />
+            {sortByPrize ? '원래 순서' : '당첨금 높은순'}
+          </Button>
+        </div>
+
         <div className="space-y-3 max-h-60 overflow-y-auto">
-          {lottoTickets.map((ticket, index) => (
+          {sortedTickets.map((ticket, index) => (
             <div key={ticket.id} className="border rounded-lg p-3 bg-gray-50 dark:bg-gray-800">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -95,6 +122,7 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
   const renderScratchResults = (scratchTickets: ScratchTicket[]) => {
     const winningTickets = scratchTickets.filter(t => t.result && t.result.prize > 0);
     const totalPrize = scratchTickets.reduce((sum, t) => sum + (t.result?.prize || 0), 0);
+    const sortedTickets = getSortedTickets() as ScratchTicket[];
 
     return (
       <div className="space-y-4">
@@ -113,8 +141,20 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
           )}
         </div>
 
+        <div className="flex justify-center mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSortByPrize(!sortByPrize)}
+            className="text-xs"
+          >
+            <ArrowUpDown className="w-3 h-3 mr-1" />
+            {sortByPrize ? '원래 순서' : '당첨금 높은순'}
+          </Button>
+        </div>
+
         <div className="space-y-3 max-h-60 overflow-y-auto">
-          {scratchTickets.map((ticket, index) => (
+          {sortedTickets.map((ticket, index) => (
             <div key={ticket.id} className="border rounded-lg p-3 bg-gray-50 dark:bg-gray-800">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -128,15 +168,27 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
                   <div className="text-sm text-gray-500">미당첨</div>
                 )}
               </div>
-              <div className="grid grid-cols-6 gap-1">
-                {ticket.symbols.map((symbol) => (
-                  <div
-                    key={symbol.id}
-                    className="aspect-square rounded flex items-center justify-center text-lg bg-gray-200 dark:bg-gray-600"
-                  >
-                    {symbol.symbol}
+              <div className="space-y-2">
+                <div className="text-xs text-gray-500 dark:text-gray-400">행운숫자: {ticket.luckyNumbers.join(', ')}</div>
+                <div className="grid grid-cols-6 gap-1">
+                  {ticket.symbols.map((symbol) => (
+                    <div
+                      key={symbol.id}
+                      className={`aspect-square rounded flex items-center justify-center text-sm font-bold ${
+                        ticket.luckyNumbers.includes(symbol.number)
+                          ? 'bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200'
+                          : 'bg-gray-200 dark:bg-gray-600'
+                      }`}
+                    >
+                      {symbol.number}
+                    </div>
+                  ))}
+                </div>
+                {ticket.result && ticket.result.matchingNumbers.length > 0 && (
+                  <div className="text-xs text-green-600">
+                    일치: {ticket.result.matchingNumbers.join(', ')}
                   </div>
-                ))}
+                )}
               </div>
             </div>
           ))}

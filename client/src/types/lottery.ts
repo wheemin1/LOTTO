@@ -23,19 +23,21 @@ export interface LottoResult {
 export interface ScratchSymbol {
   id: string;
   symbol: string;
+  number: number;
   revealed: boolean;
 }
 
 export interface ScratchTicket {
   id: string;
   symbols: ScratchSymbol[];
+  luckyNumbers: number[]; // 행운숫자 3개
   purchaseDate: Date;
   isComplete: boolean;
   result?: ScratchResult;
 }
 
 export interface ScratchResult {
-  matchingSymbols: string[];
+  matchingNumbers: number[];
   prize: number;
 }
 

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLotteryStore } from '@/stores/lottery-store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import LottoStats from '@/components/lottery/lotto-stats';
 
 export default function Lotto645() {
   const { lotto645, loadTickets } = useLotteryStore();
@@ -56,6 +57,11 @@ export default function Lotto645() {
             </div>
           </CardContent>
         </Card>
+      </div>
+      
+      {/* Winning Number Statistics */}
+      <div className="mb-8">
+        <LottoStats />
       </div>
       
       {/* Tickets List */}
