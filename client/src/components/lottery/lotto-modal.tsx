@@ -58,7 +58,7 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>로또 6/45</DialogTitle>
         </DialogHeader>
@@ -130,7 +130,10 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
           
           {/* Game Count */}
           <div className="flex justify-between items-center">
-            <span className="text-gray-700 dark:text-gray-300">게임 수</span>
+            <div>
+              <span className="text-gray-700 dark:text-gray-300 block">게임 수</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">1게임당 1,000원</span>
+            </div>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -162,6 +165,12 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
                 <Plus className="w-4 h-4" />
               </Button>
             </div>
+          </div>
+          
+          {/* Total Price */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+            <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">총 구매 금액</div>
+            <div className="text-2xl font-bold text-blue-600">{(gameCount * 1000).toLocaleString()}원</div>
           </div>
           
           {/* Purchase Button */}

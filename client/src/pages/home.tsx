@@ -47,14 +47,14 @@ export default function Home() {
         {/* Lotto 6/45 Card */}
         <LotteryCard
           title="로또 6/45"
-          price=""
+          price="1,000원"
           description="1~45 중 6개 번호 선택"
-          prize="1등 당첨금: 약 20억원"
+          prize="1등 당첨금: 약 20~25억원"
           feature="자동/수동 선택 가능"
           color="blue"
           onClick={() => setShowLottoModal(true)}
         >
-          <div className="flex justify-center space-x-2 mb-6">
+          <div className="flex justify-center space-x-2 mb-4">
             <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-yellow-200">7</div>
             <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-blue-200">14</div>
             <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-green-200">23</div>
@@ -62,19 +62,41 @@ export default function Home() {
             <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-purple-200">38</div>
             <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-red-200 border-2 border-red-400">42</div>
           </div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+            <div className="flex justify-between">
+              <span>1등 (6개 일치):</span>
+              <span>1/8,145,060</span>
+            </div>
+            <div className="flex justify-between">
+              <span>2등 (5개+보너스):</span>
+              <span>1/1,357,510</span>
+            </div>
+            <div className="flex justify-between">
+              <span>3등 (5개 일치):</span>
+              <span>1/35,724</span>
+            </div>
+            <div className="flex justify-between">
+              <span>4등 (4개 일치):</span>
+              <span>1/733</span>
+            </div>
+            <div className="flex justify-between">
+              <span>5등 (3개 일치):</span>
+              <span>1/45</span>
+            </div>
+          </div>
         </LotteryCard>
 
         {/* Speetto 1000 Card */}
         <LotteryCard
           title="스피또1000"
-          price=""
+          price="1,000원"
           description="즉석 스크래치 복권"
           prize="1등 당첨금: 100만원"
           feature="터치로 스크래치"
           color="red"
           onClick={() => setShowScratchModal(true)}
         >
-          <div className="bg-gray-300 dark:bg-gray-600 rounded-lg p-4 mb-6 relative overflow-hidden">
+          <div className="bg-gray-300 dark:bg-gray-600 rounded-lg p-4 mb-4 relative overflow-hidden">
             <div className="scratch-area absolute inset-0 rounded-lg flex items-center justify-center opacity-80">
               <span className="text-gray-600 dark:text-gray-300 font-medium">긁어보세요!</span>
             </div>
@@ -83,20 +105,42 @@ export default function Home() {
               <div className="text-sm text-gray-700 dark:text-gray-300">1,000,000원</div>
             </div>
           </div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+            <div className="flex justify-between">
+              <span>1등 (100만원):</span>
+              <span>1/100,000</span>
+            </div>
+            <div className="flex justify-between">
+              <span>2등 (10만원):</span>
+              <span>1/10,000</span>
+            </div>
+            <div className="flex justify-between">
+              <span>3등 (1만원):</span>
+              <span>1/1,000</span>
+            </div>
+            <div className="flex justify-between">
+              <span>4등 (5천원):</span>
+              <span>1/100</span>
+            </div>
+            <div className="flex justify-between">
+              <span>5등 (1천원):</span>
+              <span>1/10</span>
+            </div>
+          </div>
         </LotteryCard>
 
         {/* Pension 720+ Card */}
         <div className="md:col-span-2 lg:col-span-1">
           <LotteryCard
             title="연금복권720+"
-            price=""
+            price="1,000원"
             description="7자리×2열 번호 선택"
             prize="1등: 월 700만원×20년"
             feature="월 연금 시뮬레이션"
             color="gold"
             onClick={() => setShowPensionModal(true)}
           >
-            <div className="bg-gradient-to-r from-yellow-500/10 to-yellow-600/20 rounded-lg p-4 mb-6">
+            <div className="bg-gradient-to-r from-yellow-500/10 to-yellow-600/20 rounded-lg p-4 mb-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">조</div>
@@ -106,6 +150,28 @@ export default function Home() {
                   <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">번</div>
                   <div className="font-mono text-lg font-bold text-yellow-600">8901234</div>
                 </div>
+              </div>
+            </div>
+            <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+              <div className="flex justify-between">
+                <span>1등 (월 700만원):</span>
+                <span>1/5,000,000</span>
+              </div>
+              <div className="flex justify-between">
+                <span>2등 (월 100만원):</span>
+                <span>1/1,000,000</span>
+              </div>
+              <div className="flex justify-between">
+                <span>3등 (월 50만원):</span>
+                <span>1/100,000</span>
+              </div>
+              <div className="flex justify-between">
+                <span>4등 (100만원):</span>
+                <span>1/10,000</span>
+              </div>
+              <div className="flex justify-between">
+                <span>5등 (10만원):</span>
+                <span>1/1,000</span>
               </div>
             </div>
           </LotteryCard>

@@ -59,6 +59,9 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
           <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             총 {lottoTickets.length}게임 생성
           </div>
+          <div className="text-lg text-gray-600 dark:text-gray-400 mb-2">
+            구매 금액: {(lottoTickets.length * 1000).toLocaleString()}원
+          </div>
           {winningTickets.length > 0 ? (
             <div className="text-lg font-semibold text-green-600">
               🎉 {winningTickets.length}게임 당첨! 총 {totalPrize.toLocaleString()}원
@@ -68,6 +71,9 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
               아쉽지만 당첨되지 않았습니다
             </div>
           )}
+          <div className={`text-sm mt-2 ${totalPrize - (lottoTickets.length * 1000) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            {totalPrize - (lottoTickets.length * 1000) >= 0 ? '수익' : '손실'}: {Math.abs(totalPrize - (lottoTickets.length * 1000)).toLocaleString()}원
+          </div>
         </div>
 
         <div className="flex justify-center mb-4">
@@ -277,7 +283,7 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-lg w-full max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{getTitle()}</DialogTitle>
         </DialogHeader>

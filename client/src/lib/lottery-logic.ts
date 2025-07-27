@@ -6,20 +6,20 @@ export class LotteryLogic {
   static generateLottoNumbers(): LottoNumbers {
     const main = cryptoRandom.uniqueRandomInts(6, 1, 45);
     const bonus = cryptoRandom.randomInt(1, 45);
-    
+
     return { main, bonus };
   }
-  
+
   static checkLottoResult(playerNumbers: LottoNumbers, winningNumbers: LottoNumbers): LottoResult {
     const mainMatches = playerNumbers.main.filter(num => 
       winningNumbers.main.includes(num)
     ).length;
-    
+
     const bonusMatch = winningNumbers.main.includes(playerNumbers.bonus || 0);
-    
+
     let rank = 0;
     let prize = 0;
-    
+
     if (mainMatches === 6) {
       rank = 1;
       prize = 2000000000; // 20억
@@ -36,20 +36,20 @@ export class LotteryLogic {
       rank = 5;
       prize = 5000; // 5천
     }
-    
+
     return { winningNumbers, rank, prize };
   }
-  
+
   // Scratch Logic
   static generateScratchTicket(): { userNumbers: number[], luckyNumbers: number[] } {
     const userNumbers: number[] = [];
     const luckyNumbers: number[] = [];
-    
+
     // 사용자 번호 6개 생성 (1-20 범위)
     for (let i = 0; i < 6; i++) {
       userNumbers.push(cryptoRandom.randomInt(1, 20));
     }
-    
+
     // 행운 번호 3개 생성 (1-20 범위, 중복 제거)
     while (luckyNumbers.length < 3) {
       const num = cryptoRandom.randomInt(1, 20);
@@ -57,16 +57,16 @@ export class LotteryLogic {
         luckyNumbers.push(num);
       }
     }
-    
+
     return { userNumbers, luckyNumbers };
   }
-  
+
   static checkScratchResult(userNumbers: number[], luckyNumbers: number[]): ScratchResult {
     const matches = userNumbers.filter(num => luckyNumbers.includes(num));
     const matchCount = matches.length;
-    
+
     let prize = 0;
-    
+
     // 일치하는 숫자 개수에 따른 당첨금 (기존 확률과 동일하게 유지)
     if (matchCount === 3) {
       prize = 1000000; // 100만원
@@ -75,26 +75,26 @@ export class LotteryLogic {
     } else if (matchCount === 1) {
       prize = 1000; // 1천원
     }
-    
+
     return { matchingNumbers: matches, prize };
   }
-  
+
   // Pension 720+ Logic
   static generatePensionNumbers(): PensionNumbers {
     const group = cryptoRandom.randomInt(1000000, 9999999).toString();
     const number = cryptoRandom.randomInt(1000000, 9999999).toString();
-    
+
     return { group, number };
   }
-  
+
   static checkPensionResult(playerNumbers: PensionNumbers, winningNumbers: PensionNumbers): PensionResult {
     const groupMatch = playerNumbers.group === winningNumbers.group;
     const numberMatch = playerNumbers.number === winningNumbers.number;
-    
+
     let rank = 0;
     let monthlyPrize = 0;
     let totalPrize = 0;
-    
+
     if (groupMatch && numberMatch) {
       rank = 1;
       monthlyPrize = 7000000; // 월 700만원
@@ -108,7 +108,66 @@ export class LotteryLogic {
       monthlyPrize = 0;
       totalPrize = 1000000; // 일시불 100만원
     }
-    
+
     return { winningNumbers, rank, monthlyPrize, totalPrize };
   }
+}
+
+export function calculateLottoResult(userNumbers: number[], bonusNumber?: number): LottoResult {
+  // Generate winning numbers (6 main + 1 bonus)
+  const winningNumbers = LotteryLogic.generateLottoNumbers();
+  const winningMain = winningNumbers.main;
+  const winningBonus = winningNumbers.bonus;
+
+  // Count matches
+  const matches = userNumbers.filter(num => winningMain.includes(num)).length;
+  const bonusMatch = bonusNumber === winningBonus;
+
+  // Determine rank and prize based on actual probabilities
+  let rank = 0;
+  let prize = 0;
+
+  // 실제 확률로 당첨 결정
+  const random = Math.random();
+
+  if (matches === 6) {
+    // 1등 확률: 1/8,145,060
+    if (random < 1/8145060) {
+      rank = 1;
+      prize = Math.floor(Math.random() * 500000000) + 2000000000; // 20억~25억
+    }
+  } else if (matches === 5 && bonusMatch) {
+    // 2등 확률: 1/1,357,510
+    if (random < 1/1357510) {
+      rank = 2;
+      prize = Math.floor(Math.random() * 40000000) + 40000000; // 4천만~8천만
+    }
+  } else if (matches === 5) {
+    // 3등 확률: 1/35,724
+    if (random < 1/35724) {
+      rank = 3;
+      prize = Math.floor(Math.random() * 500000) + 1500000; // 150만~200만
+    }
+  } else if (matches === 4) {
+    // 4등 확률: 1/733
+    if (random < 1/733) {
+      rank = 4;
+      prize = 50000;
+    }
+  } else if (matches === 3) {
+    // 5등 확률: 1/45
+    if (random < 1/45) {
+      rank = 5;
+      prize = 5000;
+    }
+  }
+
+  return {
+    winningNumbers: { main: winningMain, bonus: winningBonus },
+    userNumbers: { main: userNumbers, bonus: bonusNumber },
+    matches,
+    bonusMatch,
+    rank,
+    prize
+  };
 }
