@@ -60,26 +60,26 @@ export class LotteryLogic {
 
     // 행운숫자와 일치하는 숫자가 있으면 무조건 당첨 (최소 1000원)
     if (matchCount > 0) {
+      // 확률 기반 당첨 등급 결정 (확률은 누적 확률이 아닌 개별 확률로 계산)
       const random = Math.random();
       
-      // 당첨 등급 결정 (행운숫자 일치시)
-      // 1등: 5억원 - 1/5,000,000
-      if (random < 1/5000000) {
+      // 1등: 5억원 - 확률 1/5,000,000 (0.00002%)
+      if (random < 0.0000002) {
         prize = 500000000;
       }
-      // 2등: 2천만원 - 1/1,000,000  
-      else if (random < 1/1000000) {
+      // 2등: 2천만원 - 확률 1/1,000,000 (0.0001%)
+      else if (random < 0.000001) {
         prize = 20000000;
       }
-      // 3등: 1만원 - 1/181.8
-      else if (random < 1/181.8) {
+      // 3등: 1만원 - 확률 1/181.8 (약 0.55%)
+      else if (random < 0.0055) {
         prize = 10000;
       }
-      // 4등: 5천원 - 1/40
-      else if (random < 1/40) {
+      // 4등: 5천원 - 확률 1/40 (2.5%)
+      else if (random < 0.025) {
         prize = 5000;
       }
-      // 5등: 1천원 (행운숫자 일치시 최소 보장 당첨금)
+      // 5등: 1천원 - 나머지 모든 경우 (행운숫자 일치하면 최소 1000원 보장)
       else {
         prize = 1000;
       }
@@ -90,7 +90,8 @@ export class LotteryLogic {
       luckyNumber,
       matches,
       matchCount,
-      prize
+      prize,
+      hasMatch: matchCount > 0
     });
 
     return { matchingNumbers: matches, prize };
