@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, BarChart3 } from 'lucide-react';
 import { LottoTicket, ScratchTicket, PensionTicket } from '@/types/lottery';
+import { useNavigate } from 'react-router-dom';
 
 interface LottoResultModalProps {
   open: boolean;
@@ -29,6 +30,12 @@ type ResultModalProps = LottoResultModalProps | ScratchResultModalProps | Pensio
 
 export default function ResultModal({ open, onOpenChange, tickets, type }: ResultModalProps) {
   const [sortByPrize, setSortByPrize] = useState(false);
+  const navigate = useNavigate();
+
+  const handleAnalyze = () => {
+    onOpenChange(false);
+    navigate('/stats');
+  };
 
   const getTitle = () => {
     switch (type) {
@@ -290,9 +297,13 @@ export default function ResultModal({ open, onOpenChange, tickets, type }: Resul
         
         {renderResults()}
         
-        <div className="flex justify-center mt-6">
-          <Button onClick={() => onOpenChange(false)} className="w-full">
+        <div className="flex gap-3 mt-6">
+          <Button onClick={() => onOpenChange(false)} variant="outline" className="flex-1">
             확인
+          </Button>
+          <Button onClick={handleAnalyze} className="flex-1">
+            <BarChart3 className="w-4 h-4 mr-2" />
+            분석하기
           </Button>
         </div>
       </DialogContent>

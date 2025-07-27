@@ -62,27 +62,27 @@ export class LotteryLogic {
 
     let prize = 0;
 
-    // 이미지 기준 확률과 당첨금
-    const random = Math.random();
-    
+    // 행운숫자와 1개 이상 일치하면 당첨 가능
     if (matchCount >= 1) {
-      // 1등: 오십만원 (50만원) - 1/5,000,000
+      const random = Math.random();
+      
+      // 1등: 5억원 - 1/5,000,000
       if (random < 1/5000000) {
-        prize = 500000;
+        prize = 500000000;
       }
-      // 2등: 이십만원 (20만원) - 1/1,000,000  
+      // 2등: 2천만원 - 1/1,000,000  
       else if (random < 1/1000000) {
-        prize = 200000;
+        prize = 20000000;
       }
-      // 3등: 일만원 (1만원) - 1/181.8
+      // 3등: 1만원 - 1/181.8
       else if (random < 1/181.8) {
         prize = 10000;
       }
-      // 4등: 오천원 (5천원) - 1/40
+      // 4등: 5천원 - 1/40
       else if (random < 1/40) {
         prize = 5000;
       }
-      // 5등: 일천원 (1천원) - 1/3.3
+      // 5등: 1천원 - 1/3.3
       else if (random < 1/3.3) {
         prize = 1000;
       }

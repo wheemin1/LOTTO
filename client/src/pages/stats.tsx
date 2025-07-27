@@ -108,9 +108,9 @@ export default function Stats() {
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="lotto">로또 6/45</TabsTrigger>
-              <TabsTrigger value="scratch">스피또 1000</TabsTrigger>
-              <TabsTrigger value="pension">연금복권 720+</TabsTrigger>
+              <TabsTrigger value="lotto" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">로또 6/45</TabsTrigger>
+              <TabsTrigger value="scratch" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">스피또 1000</TabsTrigger>
+              <TabsTrigger value="pension" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">연금복권 720+</TabsTrigger>
             </TabsList>
 
             {/* 로또 6/45 탭 */}
@@ -237,8 +237,8 @@ export default function Stats() {
                     <div>총 당첨금</div>
                   </div>
                   {[
-                    { grade: '1등', prize: 500000, count: speetto1000.tickets.filter(t => t.result?.prize === 500000).length },
-                    { grade: '2등', prize: 200000, count: speetto1000.tickets.filter(t => t.result?.prize === 200000).length },
+                    { grade: '1등', prize: 500000000, count: speetto1000.tickets.filter(t => t.result?.prize === 500000000).length },
+                    { grade: '2등', prize: 20000000, count: speetto1000.tickets.filter(t => t.result?.prize === 20000000).length },
                     { grade: '3등', prize: 10000, count: speetto1000.tickets.filter(t => t.result?.prize === 10000).length },
                     { grade: '4등', prize: 5000, count: speetto1000.tickets.filter(t => t.result?.prize === 5000).length },
                     { grade: '5등', prize: 1000, count: speetto1000.tickets.filter(t => t.result?.prize === 1000).length },
