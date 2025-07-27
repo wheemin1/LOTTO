@@ -38,15 +38,15 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
     try {
       await purchaseLottoTicket(selectedNumbers, isAuto, gameCount);
       toast({
-        title: "구매 완료",
-        description: `로또 ${gameCount}게임을 구매했습니다.`,
+        title: "생성 완료",
+        description: `로또 ${gameCount}게임을 생성했습니다.`,
       });
       onOpenChange(false);
       setSelectedNumbers([]);
       setGameCount(1);
     } catch (error) {
       toast({
-        title: "구매 실패",
+        title: "생성 실패",
         description: "다시 시도해주세요.",
         variant: "destructive",
       });
@@ -123,7 +123,7 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
           
           {/* Game Count */}
           <div className="flex justify-between items-center">
-            <span className="text-gray-700 dark:text-gray-300">게임 수</span>
+            <span className="text-gray-700 dark:text-gray-300">게임 수 (1장에 최대 5게임)</span>
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
@@ -134,7 +134,17 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
               >
                 <Minus className="w-4 h-4" />
               </Button>
-              <span className="w-8 text-center font-mono">{gameCount}</span>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                value={gameCount}
+                onChange={(e) => {
+                  const value = Math.min(5, Math.max(1, parseInt(e.target.value) || 1));
+                  setGameCount(value);
+                }}
+                className="w-12 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-1 py-1"
+              />
               <Button
                 variant="outline"
                 size="icon"
@@ -147,19 +157,13 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
             </div>
           </div>
           
-          {/* Total Cost */}
-          <div className="flex justify-between items-center text-lg font-bold">
-            <span className="text-gray-900 dark:text-white">총 금액</span>
-            <span className="text-blue-600">₩{(gameCount * 1000).toLocaleString()}</span>
-          </div>
-          
           {/* Purchase Button */}
           <Button
             onClick={handlePurchase}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-bold"
             size="lg"
           >
-            구매하기
+            복권 생성하기
           </Button>
         </div>
       </DialogContent>

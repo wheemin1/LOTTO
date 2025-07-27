@@ -32,15 +32,15 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
       const numbers = isAuto ? { group: '', number: '' } : { group, number };
       await purchasePensionTicket(numbers, isAuto);
       toast({
-        title: "구매 완료",
-        description: "연금복권720+을 구매했습니다.",
+        title: "생성 완료",
+        description: "연금복권720+을 생성했습니다.",
       });
       onOpenChange(false);
       setGroup('');
       setNumber('');
     } catch (error) {
       toast({
-        title: "구매 실패",
+        title: "생성 실패",
         description: "다시 시도해주세요.",
         variant: "destructive",
       });
@@ -145,19 +145,13 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
             </div>
           </div>
           
-          {/* Total Cost */}
-          <div className="flex justify-between items-center text-lg font-bold">
-            <span className="text-gray-900 dark:text-white">총 금액</span>
-            <span className="text-yellow-600">₩720</span>
-          </div>
-          
           {/* Purchase Button */}
           <Button
             onClick={handlePurchase}
             className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-3 text-lg font-bold"
             size="lg"
           >
-            구매하기
+            복권 생성하기
           </Button>
         </div>
       </DialogContent>

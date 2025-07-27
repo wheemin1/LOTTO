@@ -74,7 +74,7 @@ export class LotteryLogic {
       });
       
       // If we accidentally created a winning combination, fix it
-      for (const [symbol, count] of symbolCounts.entries()) {
+      for (const [symbol, count] of Array.from(symbolCounts.entries())) {
         if (count >= 3) {
           const indices = grid.map((s, i) => s === symbol ? i : -1).filter(i => i !== -1);
           const toChange = indices.slice(2); // Keep only 2
@@ -99,7 +99,7 @@ export class LotteryLogic {
     const matchingSymbols: string[] = [];
     let prize = 0;
     
-    for (const [symbol, count] of symbolCounts.entries()) {
+    for (const [symbol, count] of Array.from(symbolCounts.entries())) {
       if (count >= 3) {
         matchingSymbols.push(symbol);
         

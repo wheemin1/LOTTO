@@ -30,8 +30,13 @@ export default function Home() {
       {/* Hero Section */}
       <section className="text-center mb-12">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          운을 시험해보세요
+          당신의 운을 시험해보세요
         </h2>
+        <div className="mb-4">
+          <span className="inline-block bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-sm font-medium px-3 py-1 rounded-full">
+            🎮 가상로또시뮬레이터
+          </span>
+        </div>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           100% 클라이언트 사이드 복권 시뮬레이터로 언제든지 안전하게 복권의 재미를 경험하세요
         </p>
@@ -42,7 +47,7 @@ export default function Home() {
         {/* Lotto 6/45 Card */}
         <LotteryCard
           title="로또 6/45"
-          price="₩1,000"
+          price=""
           description="1~45 중 6개 번호 선택"
           prize="1등 당첨금: 약 20억원"
           feature="자동/수동 선택 가능"
@@ -62,7 +67,7 @@ export default function Home() {
         {/* Speetto 1000 Card */}
         <LotteryCard
           title="스피또1000"
-          price="₩1,000"
+          price=""
           description="즉석 스크래치 복권"
           prize="1등 당첨금: 100만원"
           feature="터치로 스크래치"
@@ -84,7 +89,7 @@ export default function Home() {
         <div className="md:col-span-2 lg:col-span-1">
           <LotteryCard
             title="연금복권720+"
-            price="₩720"
+            price=""
             description="7자리×2열 번호 선택"
             prize="1등: 월 700만원×20년"
             feature="월 연금 시뮬레이션"

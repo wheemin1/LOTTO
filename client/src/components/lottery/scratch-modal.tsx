@@ -23,13 +23,13 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
     try {
       await purchaseScratchTicket(ticketCount);
       toast({
-        title: "구매 완료",
-        description: `스피또1000 ${ticketCount}매를 구매했습니다.`,
+        title: "생성 완료",
+        description: `스피또1000 ${ticketCount}매를 생성했습니다.`,
       });
       setTicketCount(1);
     } catch (error) {
       toast({
-        title: "구매 실패",
+        title: "생성 실패",
         description: "다시 시도해주세요.",
         variant: "destructive",
       });
@@ -105,7 +105,7 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
           <div className="space-y-4">
             {/* Ticket Count */}
             <div className="flex justify-between items-center">
-              <span className="text-gray-700 dark:text-gray-300">구매 매수</span>
+              <span className="text-gray-700 dark:text-gray-300">생성 매수</span>
               <div className="flex items-center space-x-2">
                 <Button
                   variant="outline"
@@ -129,19 +129,13 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
               </div>
             </div>
             
-            {/* Total Cost */}
-            <div className="flex justify-between items-center text-lg font-bold">
-              <span className="text-gray-900 dark:text-white">총 금액</span>
-              <span className="text-red-600">₩{(ticketCount * 1000).toLocaleString()}</span>
-            </div>
-            
             {/* Purchase Button */}
             <Button
               onClick={handlePurchase}
               className="w-full bg-red-600 hover:bg-red-700 text-white py-3 text-lg font-bold"
               size="lg"
             >
-              구매하기
+              복권 긁기
             </Button>
           </div>
         </div>
