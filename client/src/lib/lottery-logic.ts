@@ -44,13 +44,13 @@ export class LotteryLogic {
   static generateScratchTicket(): { userNumbers: number[], luckyNumbers: number[] } {
     const userNumbers: number[] = [];
     
-    // 사용자 번호 6개 생성 (1-20 범위)
+    // 사용자 번호 6개 생성 (1-9 범위)
     for (let i = 0; i < 6; i++) {
-      userNumbers.push(cryptoRandom.randomInt(1, 20));
+      userNumbers.push(cryptoRandom.randomInt(1, 9));
     }
 
-    // 행운 번호 1개 생성 (1-20 범위)
-    const luckyNumbers = [cryptoRandom.randomInt(1, 20)];
+    // 행운 번호 1개 생성 (1-9 범위)
+    const luckyNumbers = [cryptoRandom.randomInt(1, 9)];
 
     return { userNumbers, luckyNumbers };
   }
@@ -63,36 +63,39 @@ export class LotteryLogic {
     let prize = 0;
     const random = Math.random();
 
-    // 실제 스피또 당첨 확률에 따른 당첨 판정
-    // 1등: 5억원 - 1/5,000,000
-    if (random < 1/5000000) {
-      prize = 500000000;
-    }
-    // 2등: 2천만원 - 1/1,000,000  
-    else if (random < 1/1000000) {
-      prize = 20000000;
-    }
-    // 3등: 1만원 - 1/181.8
-    else if (random < 1/181.8) {
-      prize = 10000;
-    }
-    // 4등: 5천원 - 1/40
-    else if (random < 1/40) {
-      prize = 5000;
-    }
-    // 5등: 1천원 - 1/3.3 (약 30.3% 확률)
-    else if (random < 1/3.3) {
-      prize = 1000;
-    }
-
-    // 당첨된 경우에만 행운숫자와 일치하는 것으로 처리
-    // (실제로는 행운숫자 일치 여부와 상관없이 당첨이 결정됨)
-    if (prize > 0 && matchCount === 0) {
-      // 당첨됐는데 일치하는 숫자가 없으면 강제로 하나 일치시킴
-      matches.push(luckyNumber);
+    // 행운숫자와 일치하는 숫자가 있거나, 확률적으로 당첨 판정
+    if (matchCount > 0 || random < 1/3.3) {
+      // 당첨 등급 결정
+      // 1등: 5억원 - 1/5,000,000
+      if (random < 1/5000000) {
+        prize = 500000000;
+      }
+      // 2등: 2천만원 - 1/1,000,000  
+      else if (random < 1/1000000) {
+        prize = 20000000;
+      }
+      // 3등: 1만원 - 1/181.8
+      else if (random < 1/181.8) {
+        prize = 10000;
+      }
+      // 4등: 5천원 - 1/40
+      else if (random < 1/40) {
+        prize = 5000;
+      }
+      // 5등: 1천원 (기본 당첨금)
+      else {
+        prize = 1000;
+      }
     }
 
-    return { matchingNumbers: matches, prize };
+    // 당첨된 경우 매칭 숫자 보장
+    const finalMatches = [...matches];
+    if (prize > 0 && finalMatches.length === 0) {
+      // 당첨됐는데 일치하는 숫자가 없으면 행운숫자를 매칭으로 처리
+      finalMatches.push(luckyNumber);
+    }
+
+    return { matchingNumbers: finalMatches, prize };
   }
 
   // Pension 720+ Logic

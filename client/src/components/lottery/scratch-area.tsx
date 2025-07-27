@@ -10,27 +10,27 @@ interface ScratchAreaProps {
 export default function ScratchArea({ symbol, onReveal, disabled = false }: ScratchAreaProps) {
   const [isScratching, setIsScratching] = useState(false);
   const areaRef = useRef<HTMLDivElement>(null);
-  
+
   const handleStart = useCallback(() => {
     if (disabled || symbol.revealed) return;
     setIsScratching(true);
   }, [disabled, symbol.revealed]);
-  
+
   const handleEnd = useCallback(() => {
     if (isScratching && !symbol.revealed) {
       onReveal(symbol.id);
     }
     setIsScratching(false);
   }, [isScratching, symbol.revealed, symbol.id, onReveal]);
-  
+
   const handleMove = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (!isScratching || disabled || symbol.revealed) return;
-    
+
     e.preventDefault();
     // For demo purposes, we'll reveal after any movement
     // In a real implementation, you'd track scratch percentage
   }, [isScratching, disabled, symbol.revealed]);
-  
+
   return (
     <div
       ref={areaRef}
@@ -52,7 +52,7 @@ export default function ScratchArea({ symbol, onReveal, disabled = false }: Scra
       >
         {symbol.revealed ? symbol.number : symbol.symbol}
       </div>
-      
+
       {!symbol.revealed && (
         <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-600 font-medium">
           긁기
