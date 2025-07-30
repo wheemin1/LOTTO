@@ -1,0 +1,109 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 그라디언트 -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ballGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ballGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF4757;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ballGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#45B7B8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ballGradient4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A8E6CF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7FCDCD;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ballGradient5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA0B4;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ballGradient6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#DDA0DD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DA70D6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 배경 -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- 배경 패턴 (작은 점들) -->
+  <circle cx="100" cy="100" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="300" cy="150" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="500" cy="80" r="4" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="700" cy="180" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="900" cy="120" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="1100" cy="160" r="2" fill="rgba(255,255,255,0.1)"/>
+  
+  <circle cx="150" cy="480" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="350" cy="520" r="3" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="550" cy="450" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="750" cy="500" r="4" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="950" cy="470" r="2" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="1050" cy="510" r="3" fill="rgba(255,255,255,0.1)"/>
+  
+  <!-- 메인 타이틀 -->
+  <text x="600" y="150" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="64" font-weight="bold">
+    🎯 로또 분석 시뮬레이션
+  </text>
+  
+  <!-- 서브타이틀 -->
+  <text x="600" y="200" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif" font-size="28" font-weight="normal">
+    무료 가상 복권 분석 도구
+  </text>
+  
+  <!-- 로또 공들 -->
+  <g transform="translate(600, 320)">
+    <!-- 첫 번째 줄 로또공 -->
+    <circle cx="-150" cy="0" r="35" fill="url(#ballGradient1)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <text x="-150" y="8" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">7</text>
+    
+    <circle cx="-50" cy="0" r="35" fill="url(#ballGradient2)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <text x="-50" y="8" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">14</text>
+    
+    <circle cx="50" cy="0" r="35" fill="url(#ballGradient3)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <text x="50" y="8" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">23</text>
+    
+    <circle cx="150" cy="0" r="35" fill="url(#ballGradient4)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <text x="150" y="8" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">31</text>
+    
+    <!-- 두 번째 줄 로또공 -->
+    <circle cx="-100" cy="80" r="35" fill="url(#ballGradient5)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <text x="-100" y="88" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">38</text>
+    
+    <circle cx="0" cy="80" r="35" fill="url(#ballGradient6)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+    <text x="0" y="88" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">45</text>
+    
+    <circle cx="100" cy="80" r="25" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="100" y="87" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial, sans-serif" font-size="16" font-weight="bold">+</text>
+  </g>
+  
+  <!-- 특징 텍스트 -->
+  <text x="600" y="500" text-anchor="middle" fill="rgba(255,255,255,0.95)" font-family="Arial, sans-serif" font-size="22" font-weight="normal">
+    로또6/45 • 스피또1000 • 연금복권720+
+  </text>
+  
+  <text x="600" y="530" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial, sans-serif" font-size="18" font-weight="normal">
+    당첨 확률 계산 | 번호 패턴 분석 | 수익률 시뮬레이션
+  </text>
+  
+  <!-- 하단 로고 -->
+  <g transform="translate(100, 550)">
+    <rect width="60" height="60" rx="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="30" y="42" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="28" font-weight="bold">L</text>
+  </g>
+  
+  <!-- 우측 상단 배지 -->
+  <g transform="translate(1000, 50)">
+    <rect width="150" height="40" rx="20" fill="rgba(255,215,0,0.9)"/>
+    <text x="75" y="28" text-anchor="middle" fill="#1E40AF" font-family="Arial, sans-serif" font-size="16" font-weight="bold">100% 무료</text>
+  </g>
+</svg>

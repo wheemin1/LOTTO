@@ -1,0 +1,28 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 그라디언트 -->
+  <defs>
+    <linearGradient id="bgApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="centerBall" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 배경 -->
+  <rect width="180" height="180" rx="28" fill="url(#bgApple)"/>
+  
+  <!-- 메인 로또공 -->
+  <circle cx="90" cy="90" r="45" fill="url(#centerBall)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+  
+  <!-- 숫자 7 -->
+  <text x="90" y="105" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="36" font-weight="bold">L</text>
+  
+  <!-- 작은 장식 공들 -->
+  <circle cx="40" cy="50" r="8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="140" cy="50" r="8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="40" cy="130" r="8" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="140" cy="130" r="8" fill="rgba(255,255,255,0.3)"/>
+</svg>
