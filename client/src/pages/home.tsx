@@ -29,16 +29,17 @@ export default function Home() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Section */}
       <section className="text-center mb-12">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          당신의 운을 시험해보세요
-        </h2>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          로또 분석 시뮬레이션 - 가상 복권 분석 도구
+        </h1>
         <div className="mb-4">
           <span className="inline-block bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-sm font-medium px-3 py-1 rounded-full">
-            🎮 가상로또시뮬레이터
+            � 무료 로또 분석 시뮬레이터
           </span>
         </div>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          100% 클라이언트 사이드 복권 시뮬레이터로 언제든지 안전하게 복권의 재미를 경험하세요
+          로또6/45, 스피또1000, 연금복권720+ 가상 분석과 통계로 당첨 패턴을 확인하세요. 
+          100% 클라이언트 사이드로 안전하게 복권 분석을 체험할 수 있습니다.
         </p>
       </section>
 

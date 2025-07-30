@@ -17,8 +17,8 @@ export default function Header() {
                 <span className="text-white font-bold text-lg">L</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">LuckySim</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400">복권 시뮬레이터</p>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">로또분석시뮬레이션</h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400">가상 복권 분석 도구</p>
               </div>
             </div>
           </Link>

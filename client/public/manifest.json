@@ -1,14 +1,14 @@
 {
-  "name": "LuckySim - 복권 시뮬레이터",
-  "short_name": "LuckySim",
-  "description": "로또 6/45, 스피또1000, 연금복권 720+ 시뮬레이터",
+  "name": "로또 분석 시뮬레이션 - 로또6/45, 스피또, 연금복권 가상 분석",
+  "short_name": "로또분석시뮬레이션",
+  "description": "무료 로또 분석 시뮬레이터로 로또6/45, 스피또1000, 연금복권720+ 가상 분석과 통계를 확인하세요. 당첨 확률 계산, 번호 패턴 분석, 수익률 시뮬레이션을 제공합니다.",
   "theme_color": "#1E40AF",
   "background_color": "#ffffff",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
-  "categories": ["entertainment", "games"],
+  "categories": ["entertainment", "games", "utilities", "finance"],
   "lang": "ko",
   "dir": "ltr",
   "icons": [
