@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://wheemin1.github.io/LOTTO/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-08-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://wheemin1.github.io/LOTTO/og-image.svg</image:loc>
+      <image:title>로또 분석 시뮬레이션 메인 페이지</image:title>
+      <image:caption>무료 로또 분석 도구</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://wheemin1.github.io/LOTTO/lotto645</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-08-01</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://wheemin1.github.io/LOTTO/speetto1000</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-08-01</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://wheemin1.github.io/LOTTO/pension720</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-08-01</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://wheemin1.github.io/LOTTO/stats</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-08-01</lastmod>
     <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
     <priority>0.7</priority>
   </url>
 </urlset>

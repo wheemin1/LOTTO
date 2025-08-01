@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
 
 # Sitemap
 Sitemap: https://wheemin1.github.io/LOTTO/sitemap.xml
@@ -10,12 +13,36 @@ Crawl-delay: 1
 # 검색엔진별 설정
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: NaverBot
 Allow: /
+Crawl-delay: 1
 
 User-agent: DaumBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Yeti
+Allow: /
+Crawl-delay: 1
+
+# 소셜 미디어 봇
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: KakaoBot
 Allow: /
