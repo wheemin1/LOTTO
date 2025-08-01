@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useLotteryStore } from '@/stores/lottery-store';
 import { useToast } from '@/hooks/use-toast';
 import ResultModal from './result-modal';
+import BatchProgress from '@/components/ui/batch-progress';
 import { LottoTicket } from '@/types/lottery';
 
 interface LottoModalProps {
@@ -18,7 +19,7 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
   const [gameCount, setGameCount] = useState(1);
   const [showResults, setShowResults] = useState(false);
   const [generatedTickets, setGeneratedTickets] = useState<LottoTicket[]>([]);
-  const { purchaseLottoTicket } = useLotteryStore();
+  const { purchaseLottoTicket, purchaseLottoTicketBatch, batchProgress, setBatchProgress } = useLotteryStore();
   const { toast } = useToast();
   
   const toggleNumber = (number: number) => {
@@ -40,13 +41,37 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
     }
     
     try {
-      const newTickets = await purchaseLottoTicket(selectedNumbers, isAuto, gameCount);
+      let newTickets: LottoTicket[];
+      
+      if (gameCount > 50) {
+        // Use batch processing for large counts
+        setBatchProgress(true, 0, gameCount, 'lotto');
+        
+        newTickets = await purchaseLottoTicketBatch(
+          selectedNumbers, 
+          isAuto, 
+          gameCount,
+          (current, total) => setBatchProgress(true, current, total, 'lotto')
+        );
+        
+        setBatchProgress(false);
+      } else {
+        // Use regular processing for small counts
+        newTickets = await purchaseLottoTicket(selectedNumbers, isAuto, gameCount);
+      }
+      
       setGeneratedTickets(newTickets);
       setShowResults(true);
       onOpenChange(false);
       setSelectedNumbers([]);
       setGameCount(1);
+      
+      toast({
+        title: "구매 완료",
+        description: `${gameCount}게임의 로또 복권을 구매했습니다.`,
+      });
     } catch (error) {
+      setBatchProgress(false);
       toast({
         title: "생성 실패",
         description: "다시 시도해주세요.",
@@ -58,12 +83,12 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-lg w-full max-h-[90vh] overflow-y-auto mx-4">
         <DialogHeader>
-          <DialogTitle>로또 6/45</DialogTitle>
+          <DialogTitle className="text-lg md:text-xl">로또 6/45</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Auto/Manual Toggle */}
           <div className="flex space-x-2">
             <Button
@@ -84,15 +109,15 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
           
           {/* Number Grid */}
           {!isAuto && (
-            <div className="grid grid-cols-9 gap-1">
+            <div className="grid grid-cols-5 sm:grid-cols-9 gap-1 md:gap-2">
               {Array.from({ length: 45 }, (_, i) => i + 1).map((num) => (
                 <Button
                   key={num}
                   variant={selectedNumbers.includes(num) ? "default" : "outline"}
                   size="sm"
-                  className={`aspect-square p-0 text-xs ${
+                  className={`aspect-square p-0 text-xs md:text-sm ${
                     selectedNumbers.includes(num) 
-                      ? "bg-blue-600 hover:bg-blue-700 text-black font-bold" 
+                      ? "bg-blue-600 hover:bg-blue-700 text-white font-bold" 
                       : ""
                   }`}
                   onClick={() => toggleNumber(num)}
@@ -105,13 +130,13 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
           
           {/* Selected Numbers Display */}
           {!isAuto && (
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">선택된 번호</div>
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 md:p-4">
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mb-2">선택된 번호</div>
               <div className="flex space-x-2 flex-wrap">
                 {selectedNumbers.map((num) => (
                   <div
                     key={num}
-                    className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold lottery-ball"
+                    className="w-7 h-7 md:w-8 md:h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs md:text-sm font-bold lottery-ball"
                   >
                     {num}
                   </div>
@@ -119,7 +144,7 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
                 {Array.from({ length: 6 - selectedNumbers.length }).map((_, i) => (
                   <div
                     key={`empty-${i}`}
-                    className="w-8 h-8 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center text-sm"
+                    className="w-7 h-7 md:w-8 md:h-8 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center text-xs md:text-sm"
                   >
                     ?
                   </div>
@@ -129,20 +154,20 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
           )}
           
           {/* Game Count */}
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <div>
-              <span className="text-gray-700 dark:text-gray-300 block">게임 수</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">1게임당 1,000원</span>
+              <span className="text-gray-700 dark:text-gray-300 block text-sm md:text-base">게임 수</span>
+              <span className="text-xs md:text-sm text-gray-500 dark:text-gray-400">1게임당 1,000원</span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-center space-x-2">
               <Button
                 variant="outline"
                 size="icon"
-                className="w-8 h-8"
+                className="w-8 h-8 md:w-10 md:h-10"
                 onClick={() => setGameCount(Math.max(1, gameCount - 1))}
                 disabled={gameCount <= 1}
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="w-3 h-3 md:w-4 md:h-4" />
               </Button>
               <input
                 type="number"
@@ -153,16 +178,16 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
                   const value = Math.min(5000, Math.max(1, parseInt(e.target.value) || 1));
                   setGameCount(value);
                 }}
-                className="w-20 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+                className="w-16 md:w-20 text-center font-mono bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm md:text-base"
               />
               <Button
                 variant="outline"
                 size="icon"
-                className="w-8 h-8"
+                className="w-8 h-8 md:w-10 md:h-10"
                 onClick={() => setGameCount(Math.min(5000, gameCount + 1))}
                 disabled={gameCount >= 5000}
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3 h-3 md:w-4 md:h-4" />
               </Button>
             </div>
           </div>
@@ -189,6 +214,13 @@ export default function LottoModal({ open, onOpenChange }: LottoModalProps) {
       open={showResults}
       onOpenChange={setShowResults}
       tickets={generatedTickets}
+      type="lotto"
+    />
+    
+    <BatchProgress
+      current={batchProgress.current}
+      total={batchProgress.total}
+      isVisible={batchProgress.isVisible && batchProgress.type === 'lotto'}
       type="lotto"
     />
     </>

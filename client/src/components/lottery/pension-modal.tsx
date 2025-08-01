@@ -52,12 +52,12 @@ export default function PensionModal({ open, onOpenChange }: PensionModalProps) 
   return (
     <>
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md mx-4">
         <DialogHeader>
-          <DialogTitle>연금복권720+</DialogTitle>
+          <DialogTitle className="text-lg md:text-xl">연금복권720+</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Auto/Manual Toggle */}
           <div className="flex space-x-2">
             <Button

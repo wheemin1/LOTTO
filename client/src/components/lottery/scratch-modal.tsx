@@ -6,6 +6,7 @@ import { useLotteryStore } from '@/stores/lottery-store';
 import { useToast } from '@/hooks/use-toast';
 import ScratchArea from './scratch-area';
 import ResultModal from './result-modal';
+import BatchProgress from '@/components/ui/batch-progress';
 import { ScratchTicket } from '@/types/lottery';
 
 interface ScratchModalProps {
@@ -17,7 +18,7 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
   const [ticketCount, setTicketCount] = useState(1);
   const [showResults, setShowResults] = useState(false);
   const [generatedTickets, setGeneratedTickets] = useState<ScratchTicket[]>([]);
-  const { speetto1000, purchaseScratchTicket, scratchTicket } = useLotteryStore();
+  const { speetto1000, purchaseScratchTicket, purchaseScratchTicketBatch, scratchTicket, batchProgress, setBatchProgress } = useLotteryStore();
   const { toast } = useToast();
   
   // Get the latest ticket for scratching
@@ -25,12 +26,34 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
   
   const handlePurchase = async () => {
     try {
-      const newTickets = await purchaseScratchTicket(ticketCount);
+      let newTickets: ScratchTicket[];
+      
+      if (ticketCount > 50) {
+        // Use batch processing for large counts
+        setBatchProgress(true, 0, ticketCount, 'scratch');
+        
+        newTickets = await purchaseScratchTicketBatch(
+          ticketCount,
+          (current, total) => setBatchProgress(true, current, total, 'scratch')
+        );
+        
+        setBatchProgress(false);
+      } else {
+        // Use regular processing for small counts
+        newTickets = await purchaseScratchTicket(ticketCount);
+      }
+      
       setGeneratedTickets(newTickets);
       setShowResults(true);
       onOpenChange(false);
       setTicketCount(1);
+      
+      toast({
+        title: "구매 완료",
+        description: `${ticketCount}장의 스피또1000을 구매했습니다.`,
+      });
     } catch (error) {
+      setBatchProgress(false);
       toast({
         title: "생성 실패",
         description: "다시 시도해주세요.",
@@ -67,12 +90,12 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
   return (
     <>
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="max-w-sm mx-4">
         <DialogHeader>
-          <DialogTitle>스피또1000</DialogTitle>
+          <DialogTitle className="text-lg md:text-xl">스피또1000</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {/* Purchase Options */}
           <div className="space-y-4">
             {/* Ticket Count */}
@@ -128,6 +151,13 @@ export default function ScratchModal({ open, onOpenChange }: ScratchModalProps) 
       open={showResults}
       onOpenChange={setShowResults}
       tickets={generatedTickets}
+      type="scratch"
+    />
+    
+    <BatchProgress
+      current={batchProgress.current}
+      total={batchProgress.total}
+      isVisible={batchProgress.isVisible && batchProgress.type === 'scratch'}
       type="scratch"
     />
     </>

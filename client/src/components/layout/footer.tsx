@@ -5,7 +5,16 @@ export default function Footer() {
         <div className="text-center">
           <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             <p className="mb-2">⚠️ 이 애플리케이션은 시뮬레이션 목적으로만 제작되었습니다.</p>
-            <p>실제 복권과는 관련이 없으며, 도박을 조장하지 않습니다.</p>
+            <p className="mb-3">실제 복권과는 관련이 없으며, 도박을 조장하지 않습니다.</p>
+            <div className="flex items-center justify-center space-x-2 text-xs bg-gray-50 dark:bg-gray-700 rounded-lg py-2 px-4 mx-auto max-w-md">
+              <span>📧 문의 및 오류 신고:</span>
+              <a 
+                href="mailto:jowheemin@gmail.com" 
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium"
+              >
+                jowheemin@gmail.com
+              </a>
+            </div>
           </div>
           
           <div className="flex justify-center items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">

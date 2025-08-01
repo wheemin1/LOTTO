@@ -5,10 +5,22 @@ import { db } from '@/lib/database';
 import { LotteryLogic } from '@/lib/lottery-logic';
 
 interface LotteryStore extends LotteryState {
+  // Batch processing state
+  batchProgress: {
+    isVisible: boolean;
+    current: number;
+    total: number;
+    type: 'lotto' | 'scratch' | 'pension' | null;
+  };
+  
   // Actions
   purchaseLottoTicket: (numbers: number[], isAuto: boolean, gameCount: number) => Promise<LottoTicket[]>;
+  purchaseLottoTicketBatch: (numbers: number[], isAuto: boolean, gameCount: number, onProgress?: (current: number, total: number) => void) => Promise<LottoTicket[]>;
   purchaseScratchTicket: (count: number) => Promise<ScratchTicket[]>;
+  purchaseScratchTicketBatch: (count: number, onProgress?: (current: number, total: number) => void) => Promise<ScratchTicket[]>;
   purchasePensionTicket: (numbers: { group: string; number: string }, isAuto: boolean) => Promise<PensionTicket[]>;
+  
+  setBatchProgress: (isVisible: boolean, current?: number, total?: number, type?: 'lotto' | 'scratch' | 'pension' | null) => void;
   
   scratchTicket: (ticketId: string, symbolIndex: number) => Promise<void>;
   
@@ -30,6 +42,14 @@ const initialStats: PurchaseStats = {
 export const useLotteryStore = create<LotteryStore>()(
   persist(
     (set, get) => ({
+      // Batch processing state
+      batchProgress: {
+        isVisible: false,
+        current: 0,
+        total: 0,
+        type: null,
+      },
+      
       lotto645: {
         tickets: [],
         stats: { ...initialStats },
@@ -78,6 +98,67 @@ export const useLotteryStore = create<LotteryStore>()(
         return tickets;
       },
 
+      purchaseLottoTicketBatch: async (numbers, isAuto, gameCount = 1, onProgress) => {
+        if (gameCount <= 10) {
+          // Small batches use regular method
+          return get().purchaseLottoTicket(numbers, isAuto, gameCount);
+        }
+
+        const tickets: LottoTicket[] = [];
+        const BATCH_SIZE = 50;
+        const totalBatches = Math.ceil(gameCount / BATCH_SIZE);
+        
+        for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+          const batchTickets: LottoTicket[] = [];
+          const currentBatchSize = Math.min(BATCH_SIZE, gameCount - batchIndex * BATCH_SIZE);
+          
+          // Generate batch of tickets
+          for (let i = 0; i < currentBatchSize; i++) {
+            const ticketNumbers = isAuto 
+              ? LotteryLogic.generateLottoNumbers()
+              : { main: numbers, bonus: numbers[6] };
+            
+            const ticket: LottoTicket = {
+              id: crypto.randomUUID(),
+              numbers: ticketNumbers,
+              isAuto,
+              purchaseDate: new Date(),
+              drawDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            };
+            
+            // Simulate draw immediately for demo
+            const winningNumbers = LotteryLogic.generateLottoNumbers();
+            ticket.result = LotteryLogic.checkLottoResult(ticket.numbers, winningNumbers);
+            
+            batchTickets.push(ticket);
+          }
+          
+          // Save batch to DB
+          await Promise.all(batchTickets.map(ticket => db.saveLottoTicket(ticket)));
+          tickets.push(...batchTickets);
+          
+          // Update progress
+          const currentTotal = (batchIndex + 1) * BATCH_SIZE;
+          const completed = Math.min(currentTotal, gameCount);
+          onProgress?.(completed, gameCount);
+          
+          // Yield control to prevent UI blocking
+          if (batchIndex < totalBatches - 1) {
+            await new Promise(resolve => setTimeout(resolve, 10));
+          }
+        }
+        
+        set(state => ({
+          lotto645: {
+            ...state.lotto645,
+            tickets: [...tickets, ...state.lotto645.tickets],
+          },
+        }));
+        
+        get().calculateStats();
+        return tickets;
+      },
+
       purchaseScratchTicket: async (count = 1) => {
         const tickets: ScratchTicket[] = [];
         
@@ -103,6 +184,68 @@ export const useLotteryStore = create<LotteryStore>()(
           
           tickets.push(ticket);
           await db.saveScratchTicket(ticket);
+        }
+        
+        set(state => ({
+          speetto1000: {
+            ...state.speetto1000,
+            tickets: [...tickets, ...state.speetto1000.tickets],
+          },
+        }));
+        
+        get().calculateStats();
+        return tickets;
+      },
+
+      purchaseScratchTicketBatch: async (count = 1, onProgress) => {
+        if (count <= 10) {
+          // Small batches use regular method
+          return get().purchaseScratchTicket(count);
+        }
+
+        const tickets: ScratchTicket[] = [];
+        const BATCH_SIZE = 50;
+        const totalBatches = Math.ceil(count / BATCH_SIZE);
+        
+        for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+          const batchTickets: ScratchTicket[] = [];
+          const currentBatchSize = Math.min(BATCH_SIZE, count - batchIndex * BATCH_SIZE);
+          
+          // Generate batch of tickets
+          for (let i = 0; i < currentBatchSize; i++) {
+            const { userNumbers, luckyNumbers } = LotteryLogic.generateScratchTicket();
+            const result = LotteryLogic.checkScratchResult(userNumbers, luckyNumbers);
+            
+            const ticket: ScratchTicket = {
+              id: crypto.randomUUID(),
+              symbols: userNumbers.map((number, index) => ({
+                id: `${crypto.randomUUID()}-${index}`,
+                symbol: '❓',
+                number,
+                revealed: true,
+              })),
+              luckyNumbers,
+              purchaseDate: new Date(),
+              isComplete: true,
+              result,
+            };
+            
+            batchTickets.push(ticket);
+          }
+          
+          // Save batch to DB
+          await Promise.all(batchTickets.map(ticket => db.saveScratchTicket(ticket)));
+          tickets.push(...batchTickets);
+          
+          // Update progress
+          const currentTotal = (batchIndex + 1) * BATCH_SIZE;
+          const completed = Math.min(currentTotal, count);
+          onProgress?.(completed, count);
+          
+          // Yield control to prevent UI blocking
+          if (batchIndex < totalBatches - 1) {
+            await new Promise(resolve => setTimeout(resolve, 10));
+          }
         }
         
         set(state => ({
@@ -180,6 +323,18 @@ export const useLotteryStore = create<LotteryStore>()(
         }));
         
         get().calculateStats();
+      },
+
+      setBatchProgress: (isVisible, current = 0, total = 0, type = null) => {
+        set(state => ({
+          ...state,
+          batchProgress: {
+            isVisible,
+            current,
+            total,
+            type,
+          },
+        }));
       },
 
       loadTickets: async () => {

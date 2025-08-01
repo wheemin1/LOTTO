@@ -28,23 +28,73 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Section */}
-      <section className="text-center mb-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          로또 분석 시뮬레이션 - 가상 복권 분석 도구
-        </h1>
-        <div className="mb-4">
-          <span className="inline-block bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-sm font-medium px-3 py-1 rounded-full">
-            � 무료 로또 분석 시뮬레이터
-          </span>
+      <section className="text-center mb-8 md:mb-16 px-4">
+        <div className="flex items-center justify-center mb-4 md:mb-6">
+          <img 
+            src="/lotto-logo.svg" 
+            alt="로또 로고" 
+            className="w-12 h-12 md:w-16 md:h-16 mr-3 md:mr-4"
+          />
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+            로또 분석 시뮬레이션
+          </h1>
         </div>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2">
           로또6/45, 스피또1000, 연금복권720+ 가상 분석과 통계로 당첨 패턴을 확인하세요. 
           100% 클라이언트 사이드로 안전하게 복권 분석을 체험할 수 있습니다.
         </p>
       </section>
 
+      {/* Dashboard Section - 나의 복권 현황 */}
+      <section className="mb-8 md:mb-12 px-4">
+        <div className="bg-gradient-to-r from-blue-50 to-red-50 dark:from-blue-900/20 dark:to-red-900/20 rounded-xl md:rounded-2xl p-4 md:p-6 border border-blue-100 dark:border-blue-800">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6 text-center">
+            📊 나의 복권 현황
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="text-lg md:text-2xl font-bold text-blue-600 dark:text-blue-400">{totalTickets.toLocaleString()}</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">구매한 복권</div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">{totalWins.toLocaleString()}</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">당첨 횟수</div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="text-lg md:text-2xl font-bold text-red-600 dark:text-red-400">{totalSpent.toLocaleString()}원</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">총 구매액</div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">{totalWon.toLocaleString()}원</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">총 당첨금</div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="text-lg md:text-2xl font-bold text-purple-600 dark:text-purple-400">{winRate.toFixed(1)}%</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">당첨율</div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 text-center shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className={`text-lg md:text-2xl font-bold ${roi >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                {roi >= 0 ? '+' : ''}{roi.toFixed(1)}%
+              </div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400">수익률</div>
+            </div>
+          </div>
+          
+          {/* 자세한 통계 보기 버튼 */}
+          {totalTickets > 0 && (
+            <div className="text-center mt-4 md:mt-6">
+              <Link href="/stats">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg text-sm md:text-base font-medium transition-colors duration-200 shadow-sm hover:shadow-md">
+                  📈 자세한 통계 보기
+                </button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Lottery Type Selection Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 px-4">
         {/* Lotto 6/45 Card */}
         <LotteryCard
           title="로또 6/45"
@@ -55,225 +105,110 @@ export default function Home() {
           color="blue"
           onClick={() => setShowLottoModal(true)}
         >
-          <div className="flex justify-center space-x-2 mb-4">
-            <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-yellow-200">7</div>
-            <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-blue-200">14</div>
-            <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-green-200">23</div>
-            <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-pink-200">31</div>
-            <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-purple-200">38</div>
-            <div className="w-10 h-10 lottery-ball rounded-full flex items-center justify-center text-sm font-bold text-gray-700 bg-red-200 border-2 border-red-400">42</div>
+          {/* 공 6개 + 보너스 공 1개 (이미지 2번째 참고) */}
+          <div className="flex justify-center items-center space-x-1 md:space-x-2 mb-3 md:mb-4">
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-orange-400 shadow-sm border border-orange-500">1</div>
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-orange-400 shadow-sm border border-orange-500">4</div>
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-red-500 shadow-sm border border-red-600">29</div>
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-gray-400 shadow-sm border border-gray-500">39</div>
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-green-500 shadow-sm border border-green-600">43</div>
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-green-600 shadow-sm border border-green-700">45</div>
+            <div className="text-lg font-bold text-gray-500 mx-1">+</div>
+            <div className="w-8 h-8 md:w-10 md:h-10 lottery-ball rounded-full flex items-center justify-center text-xs md:text-sm font-bold text-black bg-gray-500 shadow-sm border border-gray-600">31</div>
           </div>
-          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-            <div className="flex justify-between">
-              <span>1등 (6개 일치):</span>
-              <span>1/8,145,060</span>
-            </div>
-            <div className="flex justify-between">
-              <span>2등 (5개+보너스):</span>
-              <span>1/1,357,510</span>
-            </div>
-            <div className="flex justify-between">
-              <span>3등 (5개 일치):</span>
-              <span>1/35,724</span>
-            </div>
-            <div className="flex justify-between">
-              <span>4등 (4개 일치):</span>
-              <span>1/733</span>
-            </div>
-            <div className="flex justify-between">
-              <span>5등 (3개 일치):</span>
-              <span>1/45</span>
+          
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 mb-3">
+            <div className="text-center">
+              <div className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-1">당첨 확률</div>
+              <div className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
+                <div>1등: 1/814만</div>
+                <div>2등: 1/135만 • 3등: 1/3.5만</div>
+              </div>
             </div>
           </div>
         </LotteryCard>
 
-        {/* Speetto 1000 Card */}
+        {/* Speetto 1000 Card - 확률 정보 수정 (이미지 4번째 참고) */}
         <LotteryCard
           title="스피또1000"
           price="1,000원"
           description="즉석 스크래치 복권"
-          prize="1등 당첨금: 50만원"
+          prize="1등 당첨금: 5억원"
           feature="터치로 스크래치"
           color="red"
           onClick={() => setShowScratchModal(true)}
         >
-          <div className="bg-gray-300 dark:bg-gray-600 rounded-lg p-4 mb-4 relative overflow-hidden">
-            <div className="scratch-area absolute inset-0 rounded-lg flex items-center justify-center opacity-80">
-              <span className="text-gray-600 dark:text-gray-300 font-medium">긁어보세요!</span>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="text-lg font-bold text-yellow-600">★ ★ ★</div>
-              <div className="text-sm text-gray-700 dark:text-gray-300">1,000,000원</div>
-            </div>
-          </div>
-          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-            <div className="flex justify-between">
-              <span>1등 (50만원):</span>
-              <span>1/5,000,000</span>
-            </div>
-            <div className="flex justify-between">
-              <span>2등 (20만원):</span>
-              <span>1/1,000,000</span>
-            </div>
-            <div className="flex justify-between">
-              <span>3등 (1만원):</span>
-              <span>1/181.8</span>
-            </div>
-            <div className="flex justify-between">
-              <span>4등 (5천원):</span>
-              <span>1/40</span>
-            </div>
-            <div className="flex justify-between">
-              <span>5등 (1천원):</span>
-              <span>1/3.3</span>
-            </div>
-            <div className="flex justify-between">
-              <span>3등 (1만원):</span>
-              <span>1/1,000</span>
-            </div>
-            <div className="flex justify-between">
-              <span>4등 (5천원):</span>
-              <span>1/100</span>
-            </div>
-            <div className="flex justify-between">
-              <span>5등 (1천원):</span>
-              <span>1/10</span>
+          {/* 정확한 당첨 정보 (이미지 4번째 참고) */}
+          <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
+            <div className="text-center">
+              <div className="text-sm font-semibold text-red-700 dark:text-red-300 mb-1">주요 당첨금</div>
+              <div className="text-xs text-red-600 dark:text-red-400 space-y-1">
+                <div>1등: 5억원 (1/5,000,000)</div>
+                <div>2등: 2천만원 (1/1,000,000)</div>
+                <div>3등: 1만원 (1/181.8)</div>
+                <div>4등: 5천원 (1/40) • 5등: 1천원 (1/3.3)</div>
+              </div>
             </div>
           </div>
         </LotteryCard>
 
         {/* Pension 720+ Card */}
-        <div className="md:col-span-2 lg:col-span-1">
-          <LotteryCard
-            title="연금복권720+"
-            price="1,000원"
-            description="7자리×2열 번호 선택"
-            prize="1등: 월 700만원×20년"
-            feature="월 연금 시뮬레이션"
-            color="gold"
-            onClick={() => setShowPensionModal(true)}
-          >
-            <div className="bg-gradient-to-r from-yellow-500/10 to-yellow-600/20 rounded-lg p-4 mb-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">조</div>
-                  <div className="font-mono text-lg font-bold text-yellow-600">1234567</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">번</div>
-                  <div className="font-mono text-lg font-bold text-yellow-600">8901234</div>
-                </div>
+        <LotteryCard
+          title="연금복권720+"
+          price="1,000원"
+          description="7자리×2열 번호 선택"
+          prize="1등: 월 700만원 20년간"
+          feature="7자리 번호 2세트"
+          color="gold"
+          onClick={() => setShowPensionModal(true)}
+        >
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="bg-green-100 dark:bg-green-900/30 rounded-lg p-2 text-center border border-green-200 dark:border-green-800">
+              <div className="text-xs text-green-600 dark:text-green-400 font-medium mb-1">1조</div>
+              <div className="text-sm font-mono font-bold text-green-700 dark:text-green-300">1234567</div>
+            </div>
+            <div className="bg-green-100 dark:bg-green-900/30 rounded-lg p-2 text-center border border-green-200 dark:border-green-800">
+              <div className="text-xs text-green-600 dark:text-green-400 font-medium mb-1">2조</div>
+              <div className="text-sm font-mono font-bold text-green-700 dark:text-green-300">7654321</div>
+            </div>
+          </div>
+          
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3">
+            <div className="text-center">
+              <div className="text-sm font-semibold text-yellow-700 dark:text-yellow-300 mb-1">주요 당첨금</div>
+              <div className="text-xs text-yellow-600 dark:text-yellow-400 space-y-1">
+                <div>1등: 월 700만원 × 20년</div>
+                <div>2등: 1억원 • 3등: 300만원</div>
               </div>
             </div>
-            <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
-              <div className="flex justify-between">
-                <span>1등 (월 700만원):</span>
-                <span>1/5,000,000</span>
-              </div>
-              <div className="flex justify-between">
-                <span>2등 (월 100만원):</span>
-                <span>1/1,000,000</span>
-              </div>
-              <div className="flex justify-between">
-                <span>3등 (월 50만원):</span>
-                <span>1/100,000</span>
-              </div>
-              <div className="flex justify-between">
-                <span>4등 (100만원):</span>
-                <span>1/10,000</span>
-              </div>
-              <div className="flex justify-between">
-                <span>5등 (10만원):</span>
-                <span>1/1,000</span>
-              </div>
-            </div>
-          </LotteryCard>
-        </div>
+          </div>
+        </LotteryCard>
       </section>
 
       {/* Features Section */}
       <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-12">
         <h3 className="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">주요 기능</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-600/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">진정한 난수</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Web Crypto API로 안전한 난수 생성</p>
+          <div className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
+            <div className="text-3xl mb-4">🎯</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">실시간 분석</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">당첨 패턴과 통계를 실시간으로 분석하여 전략적인 번호 선택을 지원합니다.</p>
           </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-red-600/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">오프라인 지원</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">PWA로 인터넷 없이도 사용 가능</p>
+          <div className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-800">
+            <div className="text-3xl mb-4">📊</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">상세한 통계</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">구매 내역, 당첨 횟수, 수익률 등 모든 데이터를 한눈에 확인할 수 있습니다.</p>
           </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-yellow-600/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">통계 분석</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">구매 내역과 수익률 분석</p>
+          <div className="text-center p-6 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800">
+            <div className="text-3xl mb-4">🔒</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">100% 안전</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">모든 데이터는 브라우저에만 저장되어 개인정보가 완전히 보호됩니다.</p>
           </div>
-          
-          <div className="text-center">
-            <div className="w-12 h-12 bg-green-600/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-              </svg>
-            </div>
-            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">결과 공유</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">CSV/PNG 내보내기 및 SNS 공유</p>
+          <div className="text-center p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800">
+            <div className="text-3xl mb-4">📱</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">모바일 최적화</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">PC와 모바일 모든 환경에서 편리하게 사용할 수 있습니다.</p>
           </div>
-        </div>
-      </section>
-
-      {/* Quick Stats Preview */}
-      <section className="bg-gradient-to-r from-blue-600/5 to-red-600/5 dark:from-blue-600/10 dark:to-red-600/10 rounded-2xl p-8">
-        <div className="text-center mb-6">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">나의 복권 현황</h3>
-          <p className="text-gray-600 dark:text-gray-400">지금까지의 구매 내역을 확인해보세요</p>
-        </div>
-        
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600 mb-1">{totalTickets}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">총 구매</div>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-green-600 mb-1">{totalWins}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">당첨 횟수</div>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-yellow-600 mb-1">{winRate.toFixed(1)}%</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">당첨률</div>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className={`text-2xl font-bold mb-1 ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {roi >= 0 ? '+' : ''}{roi.toFixed(0)}%
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">수익률</div>
-          </div>
-        </div>
-        
-        <div className="mt-6 text-center">
-          <Link href="/stats">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors font-medium">
-              자세한 통계 보기
-            </button>
-          </Link>
         </div>
       </section>
       
